@@ -5,6 +5,6 @@ mettre en place un système réparti supportant les applications nécessaires à
 diffusion auprès des distributeurs.
 
 # After pull
-git fetch
-git checkout develop
+git fetch </br>
+git checkout develop </br>
 Use branch develop for future developement, keep master intact
