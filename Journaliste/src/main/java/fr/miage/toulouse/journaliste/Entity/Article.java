@@ -6,6 +6,8 @@
 package fr.miage.toulouse.journaliste.Entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  *
@@ -15,17 +17,21 @@ public class Article implements Serializable{
     private String nameArticle;
     private String codeArticle;
     private String nameAuthor;
-    private String[] keywords;
+    private List<String> keywords;
     private String content;
     private int numArticle;
+    private String codeTitre;
+    private LocalDateTime date;
     private static int numGlobalArticle = 0;
 
-    public Article(String nameArticle, String codeArticle, String nameAuthor, String[] keywords, String content) {
+    public Article(String nameArticle, String codeArticle, String nameAuthor, List<String> keywords, String content, String codeTitre) {
         this.nameArticle = nameArticle;
         this.codeArticle = codeArticle;
         this.nameAuthor = nameAuthor;
         this.keywords = keywords;
         this.content = content;
+        this.codeTitre = codeTitre;
+        this.date = LocalDateTime.now();
         this.numArticle = Article.numGlobalArticle + 1;
     }
 
@@ -53,11 +59,11 @@ public class Article implements Serializable{
         this.nameAuthor = nameAuthor;
     }
 
-    public String[] getKeywords() {
+    public List<String> getKeywords() {
         return keywords;
     }
 
-    public void setKeywords(String[] keywords) {
+    public void setKeywords(List<String> keywords) {
         this.keywords = keywords;
     }
 
@@ -76,5 +82,16 @@ public class Article implements Serializable{
     public void setNumArticle(int numArticle) {
         this.numArticle = numArticle;
     }
+
+    public String getCodeTitre() {
+        return codeTitre;
+    }
+
+    public void setCodeTitre(String codeTitre) {
+        this.codeTitre = codeTitre;
+    }
     
+    public LocalDateTime getDate(){
+        return this.date;
+    }
 }

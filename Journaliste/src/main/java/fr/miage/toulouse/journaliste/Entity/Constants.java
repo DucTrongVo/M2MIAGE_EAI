@@ -14,4 +14,12 @@ public final class Constants {
     
     public static final String destName = "";
     
+    public static final String EMPTY_NAME_AUTHOR = "Le nom d'auteur ne doit pas être vide!";
+    
+    public static final String EMPTY_CONTENT_ARTICLE = "Le contenu d'article ne doit pas être vide!";
+    
+    public static final String EMPTY_NAME_ARTICLE = "Le nom d'article ne doit pas être vide!";
+    
+    public static final String EMPTY_KEYWORDS = "Au moins UN mots clé doit être fourni!";
+    
 }
