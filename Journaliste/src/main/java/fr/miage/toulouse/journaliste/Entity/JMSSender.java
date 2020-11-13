@@ -27,8 +27,8 @@ public class JMSSender {
     private Context context = null;
     private ConnectionFactory factory = null;
     private Connection connection = null;
-    private String factoryName = Constants.factoryName;
-    private String destName = Constants.destName;
+    private String factoryName = Constants.FACTORYNAME;
+    private String destName = Constants.DESTNAME;
     private Destination dest = null;
     private Session session = null;
     private MessageProducer sender = null;
@@ -62,7 +62,7 @@ public class JMSSender {
             ObjectMessage message = session.createObjectMessage(article);
             message.setJMSType(article.getCodeArticle());
             sender.send(message);
-            System.out.println("Sent artcle: " + article.getCodeArticle());
+            System.out.println("Sent article: " + article.getCodeArticle());
                 //Thread.sleep(5000);
            //}
         }catch (JMSException exception) {

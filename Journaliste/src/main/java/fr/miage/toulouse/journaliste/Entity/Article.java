@@ -10,10 +10,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- *
+ *x
  * @author trongvo
  */
 public class Article implements Serializable{
+    private static final long serialVersionUID = 1L;
+    
     private String nameArticle;
     private String codeArticle;
     private String nameAuthor;

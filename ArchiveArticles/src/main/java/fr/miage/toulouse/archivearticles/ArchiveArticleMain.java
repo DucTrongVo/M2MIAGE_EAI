@@ -9,9 +9,9 @@ package fr.miage.toulouse.archivearticles;
  *
  * @author trongvo
  */
-public final class Constants {
-    public static final String FACTORYNAME = "jms/__defaultConnectionFactory";
-    
-    public static final String DESTNAME = "JournalisteVersArchiveArticles";
-    
+public class ArchiveArticleMain {
+    public static void main(String[] args) {
+        Archive archive = new Archive();
+        archive.receiverArticle();
+    }
 }

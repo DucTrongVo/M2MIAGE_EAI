@@ -5,6 +5,7 @@
  */
 package fr.miage.toulouse.archivearticles;
 
+import fr.miage.toulouse.journaliste.Entity.Article;
 import java.util.ArrayList;
 import java.util.List;
 import javax.naming.Context;
@@ -54,12 +55,11 @@ public class Archive {
         Context context = null;
         ConnectionFactory factory = null;
         Connection connection = null;
-        String factoryName = Constants.factoryName;
-        String destName = Constants.destName;
+        String factoryName = Constants.FACTORYNAME;
+        String destName = Constants.DESTNAME;
         Destination dest = null;
         Session session = null;
         MessageConsumer receiver = null;
-        int count = 0;
 
         try {
             // create the JNDI initial context
@@ -90,6 +90,7 @@ public class Archive {
                     ObjectMessage mess = (ObjectMessage) message;
                     Article articleReceived = (Article) mess.getObject();
                     System.out.println("Received: " + articleReceived.getCodeArticle());
+                    this.addNewArticle(articleReceived);
                 } else if (message != null) {
                     System.out.println("Received non text message");
                 }
