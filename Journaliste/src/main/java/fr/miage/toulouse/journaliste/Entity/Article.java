@@ -96,4 +96,10 @@ public class Article implements Serializable{
     public LocalDateTime getDate(){
         return this.date;
     }
+    
+    @Override
+    public String toString(){
+        String res = "Code article : "+this.getCodeArticle()+" - Name article : "+this.getNameArticle();
+        return res;
+    }
 }

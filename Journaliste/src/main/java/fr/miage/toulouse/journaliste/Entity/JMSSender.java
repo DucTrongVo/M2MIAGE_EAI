@@ -28,7 +28,7 @@ public class JMSSender {
     private ConnectionFactory factory = null;
     private Connection connection = null;
     private String factoryName = Constants.FACTORYNAME;
-    private String destName = Constants.DESTNAME;
+    private String destName = Constants.DESTNAME_ARCHIVE_RECEIVER;
     private Destination dest = null;
     private Session session = null;
     private MessageProducer sender = null;
@@ -58,13 +58,11 @@ public class JMSSender {
             connection.start();
             
             // Send article
-            //while(openConnexion) {
             ObjectMessage message = session.createObjectMessage(article);
             message.setJMSType(article.getCodeArticle());
             sender.send(message);
             System.out.println("Sent article: " + article.getCodeArticle());
                 //Thread.sleep(5000);
-           //}
         }catch (JMSException exception) {
             exception.printStackTrace();
         } catch (NamingException ex) {

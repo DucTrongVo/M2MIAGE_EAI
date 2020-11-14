@@ -6,6 +6,7 @@
 package fr.miage.toulouse.archivearticles;
 
 import fr.miage.toulouse.journaliste.Entity.Article;
+import fr.miage.toulouse.journaliste.Entity.Constants;
 import java.util.ArrayList;
 import java.util.List;
 import javax.naming.Context;
@@ -19,7 +20,9 @@ import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Session;
 import javax.jms.MessageConsumer;
+import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
+import javax.jms.TextMessage;
 /**
  *
  * @author trongvo
@@ -56,10 +59,13 @@ public class Archive {
         ConnectionFactory factory = null;
         Connection connection = null;
         String factoryName = Constants.FACTORYNAME;
-        String destName = Constants.DESTNAME;
-        Destination dest = null;
+        String destNameReceiver = Constants.DESTNAME_ARCHIVE_RECEIVER;
+        String destNameProducer = Constants.DESTNAME_ARCHIVE_PRODUCER;
+        Destination destReceiver = null;
+        Destination destProducer = null;
         Session session = null;
         MessageConsumer receiver = null;
+        MessageProducer producer = null;
 
         try {
             // create the JNDI initial context
@@ -69,7 +75,8 @@ public class Archive {
             factory = (ConnectionFactory) context.lookup(factoryName);
 
             // look up the Destination
-            dest = (Destination) context.lookup(destName);
+            destReceiver = (Destination) context.lookup(destNameReceiver);
+            destProducer = (Destination) context.lookup(destNameProducer);
 
             // create the connection
             connection = factory.createConnection();
@@ -78,20 +85,35 @@ public class Archive {
             session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
             // create the receiver
-            //receiver = session.createConsumer(dest,"JMSType IN ('GOO','AMZ','OKT','MIA')");
-            receiver = session.createConsumer(dest);
+            //receiver = session.createConsumer(destReceiver,"JMSType IN ('GOO','AMZ','OKT','MIA')");
+            receiver = session.createConsumer(destReceiver);
+            // create the producer 
+            producer = session.createProducer(destProducer);
 
+            System.out.println("Receiver : "+receiver);
             // start the connection, to enable message receipt
             connection.start();
 
             while(true){
-                Message message = receiver.receive();
-                if (message instanceof ObjectMessage) {
-                    ObjectMessage mess = (ObjectMessage) message;
+                Message messageReceive = receiver.receive();
+                if(messageReceive instanceof TextMessage){
+                    TextMessage mess = (TextMessage) messageReceive;
+                    System.out.println("messageFromREC "+mess.getText());
+                    if(this.listArticles.size() > 0){
+                        ObjectMessage odjectMessage = session.createObjectMessage(this.listArticles.get(listArticles.size()-1));
+                        //ObjectMessage odjectMessage = sessionConsumer.createObjectMessage(this.listArticles.get(0));
+                        producer.send(odjectMessage);
+                        System.out.println("Send to REC : "+listArticles.get(0));
+                    }
+                }
+                 
+                else if (messageReceive instanceof ObjectMessage) {
+                    ObjectMessage mess = (ObjectMessage) messageReceive;
                     Article articleReceived = (Article) mess.getObject();
-                    System.out.println("Received: " + articleReceived.getCodeArticle());
+                    System.out.println("Archive Article Received: " + articleReceived.getCodeArticle());
                     this.addNewArticle(articleReceived);
-                } else if (message != null) {
+                }
+                else if (messageReceive != null) {
                     System.out.println("Received non text message");
                 }
             }
@@ -102,6 +124,7 @@ public class Archive {
             if (context != null) {
                 try {
                     context.close();
+                    System.out.println("Context Archive close");
                 } catch (NamingException exception) {
                     exception.printStackTrace();
                 }
@@ -111,6 +134,7 @@ public class Archive {
             if (connection != null) {
                 try {
                     connection.close();
+                    System.out.println("Connexion Archive close");
                 } catch (JMSException exception) {
                     exception.printStackTrace();
                 }

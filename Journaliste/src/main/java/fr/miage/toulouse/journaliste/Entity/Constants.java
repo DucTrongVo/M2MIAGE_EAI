@@ -12,7 +12,10 @@ package fr.miage.toulouse.journaliste.Entity;
 public final class Constants {
     public static final String FACTORYNAME = "jms/__defaultConnectionFactory";
     
-    public static final String DESTNAME = "JournalisteVersArchiveArticles";
+    public static final String DESTNAME_ARCHIVE_RECEIVER = "JMSReceiverQueue";
+    //public static final String DESTNAME_ARCHIVE_RECEIVER = "JournalisteVersArchiveArticles";
+    
+    public static final String DESTNAME_ARCHIVE_PRODUCER = "JMSSenderQueue";
     
     public static final String EMPTY_NAME_AUTHOR = "Le nom d'auteur ne doit pas être vide!";
     
