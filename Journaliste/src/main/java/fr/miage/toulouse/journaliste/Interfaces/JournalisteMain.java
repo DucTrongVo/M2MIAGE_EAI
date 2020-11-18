@@ -251,8 +251,10 @@ public class JournalisteMain extends javax.swing.JFrame {
             //this.codeTitre = textFieldCodeTitre.getText();
 
             Article article = new Article(nameArticle, codeArticle, nameAuthor, keywords, content);
-            JOptionPane.showMessageDialog(this, "Article envoyé avec succuès!");
+            
             sender.sendArticle(article);
+            JOptionPane.showMessageDialog(this, Constants.SEND_SUCCEDED);
+            
             textFieldNomArticle.setText("");
             textFieldCodeArticle.setText("");
             textAreaContent.setText("");

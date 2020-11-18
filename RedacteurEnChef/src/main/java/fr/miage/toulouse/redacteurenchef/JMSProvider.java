@@ -144,7 +144,8 @@ public class JMSProvider {
         }
     }
     
-    public void sendArticlesToMiseSousPresse(List<Article> listArticlesChosen, String codeTheme){
+    public boolean sendArticlesToMiseSousPresse(List<Article> listArticlesChosen, String codeTheme){
+        boolean success = true;
         try {
             //openConnexion = true;
             // create the JNDI initial context.
@@ -163,15 +164,18 @@ public class JMSProvider {
             connection.start();
             for(Article article : listArticlesChosen){
                 ObjectMessage objectMessage = session.createObjectMessage(article);
-                objectMessage.setStringProperty("codeTheme", codeTheme);
+                objectMessage.setStringProperty(Constants.CODE_THEME, codeTheme);
+                objectMessage.setStringProperty(Constants.TYPE, Constants.ARTICLE);
                 producer.send(objectMessage);
                 System.out.println("Send to Mise Sous Presse : "+article.toString()+" - codeTheme : "+codeTheme);
             }
             
         } catch (NamingException ex) {
             Logger.getLogger(JMSProvider.class.getName()).log(Level.SEVERE, null, ex);
+            success = false;
         } catch (JMSException ex) {
             Logger.getLogger(JMSProvider.class.getName()).log(Level.SEVERE, null, ex);
+            success = false;
         }finally {
             // close the context
             if (context != null) {
@@ -191,5 +195,6 @@ public class JMSProvider {
                 }
             }
         }
+        return success;
     }
 }

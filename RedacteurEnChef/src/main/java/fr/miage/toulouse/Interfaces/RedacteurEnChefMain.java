@@ -42,6 +42,10 @@ public class RedacteurEnChefMain extends javax.swing.JFrame {
         listArticlesChosen = new ArrayList<>();
         tableArticleReceiveModel.setColumnIdentifiers(tableArticleReceivedHeaders);
         jTableArticlesReceived.setModel(tableArticleReceiveModel);
+        jComboBoxCodeThem.addItem(Constants.THEME_NAMES_1);
+        jComboBoxCodeThem.addItem(Constants.THEME_NAMES_2);
+        jComboBoxCodeThem.addItem(Constants.THEME_NAMES_3);
+        jComboBoxCodeThem.addItem(Constants.THEME_NAMES_4);
         resizeTableArticle();
         // Test data
 //        listArticlesReceived.add(new Article("Name Article", "AA", "Name Author", new ArrayList<>(Arrays.asList("Content content")), "18/11/2020"));
@@ -161,7 +165,11 @@ public class RedacteurEnChefMain extends javax.swing.JFrame {
         jLabelCodeThem.setText("Choisir le code du Thème :");
 
         jComboBoxCodeThem.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
-        jComboBoxCodeThem.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Games", "Science Fiction", "Sicence", "Economic" }));
+        jComboBoxCodeThem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxCodeThemActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout tabGetArticleLayout = new javax.swing.GroupLayout(tabGetArticle);
         tabGetArticle.setLayout(tabGetArticleLayout);
@@ -343,10 +351,10 @@ public class RedacteurEnChefMain extends javax.swing.JFrame {
             String theme = jComboBoxCodeThem.getSelectedItem().toString();
             String codeTheme = "";
             switch(theme){
-                case "Games": codeTheme = "GA";break;
-                case "Science Fiction": codeTheme = "SF";break;
-                case "Science": codeTheme = "SC";break;
-                case "Economic": codeTheme = "EC";break;
+                case Constants.THEME_NAMES_1: codeTheme = "GA";break;
+                case Constants.THEME_NAMES_2: codeTheme = "SF";break;
+                case Constants.THEME_NAMES_3: codeTheme = "SC";break;
+                case Constants.THEME_NAMES_4: codeTheme = "EC";break;
                 default: codeTheme = "GA";break;
             }
             System.out.println("Theme : "+theme+" - codeTheme : "+codeTheme);
@@ -355,7 +363,12 @@ public class RedacteurEnChefMain extends javax.swing.JFrame {
             if(listArticlesChosen.size() < 1){
                 JOptionPane.showMessageDialog(this, Constants.EMPTY_LIST_ARTICLE_CHOSEN, "Inane warning", JOptionPane.WARNING_MESSAGE);
             } else {
-                jmsProvider.sendArticlesToMiseSousPresse(listArticlesChosen, codeTheme);
+                boolean success = jmsProvider.sendArticlesToMiseSousPresse(listArticlesChosen, codeTheme);
+                if(success){
+                    JOptionPane.showMessageDialog(this, Constants.SEND_SUCCEDED);
+                }else{
+                    JOptionPane.showMessageDialog(this, Constants.SEND_FAILED, "Inane error", JOptionPane.ERROR_MESSAGE);
+                }
             }
             
         }
@@ -375,6 +388,10 @@ public class RedacteurEnChefMain extends javax.swing.JFrame {
         }
        
     }//GEN-LAST:event_comboBoxCodeArticlesActionPerformed
+
+    private void jComboBoxCodeThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxCodeThemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxCodeThemActionPerformed
 
     /**
      * @param args the command line arguments

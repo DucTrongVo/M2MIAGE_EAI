@@ -9,6 +9,8 @@ import fr.miage.toulouse.gestionpublicite.Publicite;
 import fr.miage.toulouse.journaliste.Entity.Article;
 import fr.miage.toulouse.journaliste.Entity.Constants;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,8 +31,9 @@ import javax.naming.NamingException;
  * @author trongvo
  */
 public class MiseSousPresse extends Thread{
-    private List<Article> listArtciles;
+    private HashMap<String,List<Article>> listArtciles;
     private List<Publicite> listPublicites;
+    private int nbrArticles;
     
     private Context context = null;
     private ConnectionFactory factory = null;
@@ -44,12 +47,26 @@ public class MiseSousPresse extends Thread{
     private Session session = null;
     //private MessageProducer producer = null;
     private MessageConsumer receiver = null;
-    
-    public MiseSousPresse(){
-        listArtciles = new ArrayList<>();
-        listPublicites = new ArrayList<>();
+
+    public HashMap<String, List<Article>> getListArtciles() {
+        return listArtciles;
+    }
+
+    public List<Publicite> getListPublicites() {
+        return listPublicites;
+    }
+
+    public int getNbrArticles() {
+        return nbrArticles;
     }
     
+    public MiseSousPresse(){
+        listArtciles = new HashMap<>();
+        listPublicites = new ArrayList<>();
+        nbrArticles = 0;
+    }
+    
+    @Override
     public void run(){
         try {
             //openConnexion = true;
@@ -69,18 +86,29 @@ public class MiseSousPresse extends Thread{
             connection.start();
             while(true){
                 ObjectMessage messageReceive = (ObjectMessage) receiver.receive();
+                nbrArticles = 0;
                 if(messageReceive instanceof ObjectMessage){
-                    Class<? extends ObjectMessage> messageClass = messageReceive.getClass();
-                    if(messageClass.equals(Article.class)){
-                        Article articleReceive = (Article) messageReceive.getObject();
-                        System.out.println("MSP Received Article : "+articleReceive.toString());
-                        this.listArtciles.add(articleReceive);
-                    }else if (messageClass.equals(Publicite.class)){
-                        Publicite pub = (Publicite) messageReceive.getObject();
-                        System.out.println("MSP Received Publicité : "+pub.toString());
-                        this.listPublicites.add(pub);
-                    }else{
-                        System.out.println("MSP Received unknown message : "+messageReceive.toString());
+                    String typeMessage = messageReceive.getStringProperty(Constants.TYPE);
+                    switch (typeMessage) {
+                        case Constants.ARTICLE:
+                            Article articleReceive = (Article) messageReceive.getObject();
+                            System.out.println("MSP Received Article : "+articleReceive.toString());
+                            String themeReceive = messageReceive.getStringProperty(Constants.CODE_THEME);
+                            if(listArtciles.containsKey(themeReceive)){
+                                listArtciles.get(themeReceive).add(articleReceive);
+                            }else{
+                                listArtciles.put(themeReceive, Arrays.asList(articleReceive));
+                            }
+                            nbrArticles += 1;
+                            break;
+                        case Constants.PUBLICITE:
+                            Publicite pub = (Publicite) messageReceive.getObject();
+                            System.out.println("MSP Received Publicité : "+pub.toString());
+                            this.listPublicites.add(pub);
+                            break;
+                        default:
+                            System.out.println("MSP Received unknown message : "+messageReceive.toString());
+                            break;
                     }
                 }
             }
