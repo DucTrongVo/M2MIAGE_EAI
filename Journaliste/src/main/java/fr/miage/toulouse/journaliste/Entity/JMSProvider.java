@@ -20,51 +20,53 @@ import javax.jms.ObjectMessage;
 import javax.jms.Session;
 
 /**
- *
+ * Classe d'objet qui effectue l'envoie des articles
  * @author trongvo
  */
-public class JMSSender {
+public class JMSProvider {
     private Context context = null;
     private ConnectionFactory factory = null;
     private Connection connection = null;
-    private String factoryName = "jms/__defaultConnectionFactory";
-    private String destName = "TestTopic";
+    private String factoryName = Constants.FACTORYNAME;
+    private String destName = Constants.DESTNAME_ARCHIVE_RECEIVER;
     private Destination dest = null;
     private Session session = null;
     private MessageProducer sender = null;
-    private boolean openConnexion;
+    
+    // attribut détermine si on va fermer la connexion (openConnexion = false)
+    //private boolean openConnexion;
 
-    public JMSSender() throws NamingException, JMSException {
-        openConnexion = true;
-        // create the JNDI initial context.
-        context = new InitialContext();
-        // look up the ConnectionFactory
-        factory = (ConnectionFactory) context.lookup(factoryName);
-        // look up the Destination
-        dest = (Destination) context.lookup(destName);
-        // create the connection
-        connection = (Connection) factory.createConnection();
-        // create the session
-        session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-        // create the sender
-        sender = session.createProducer(dest);
-        // start the connection, to enable message sends
-        connection.start();
+    public JMSProvider(){
     }
     
     public void sendArticle(Article article){
         try{
-            //while(openConnexion) {
-                ObjectMessage message = session.createObjectMessage(article);
-                message.setJMSType(article.getCodeArticle());
-                sender.send(message);
-                System.out.println("Sent artcle: " + article.getCodeArticle());
+            //openConnexion = true;
+            // create the JNDI initial context.
+            context = new InitialContext();
+            // look up the ConnectionFactory
+            factory = (ConnectionFactory) context.lookup(factoryName);
+            // look up the Destination
+            dest = (Destination) context.lookup(destName);
+            // create the connection
+            connection = (Connection) factory.createConnection();
+            // create the session
+            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            // create the sender
+            sender = session.createProducer(dest);
+            // start the connection, to enable message sends
+            connection.start();
+            
+            // Send article
+            ObjectMessage message = session.createObjectMessage(article);
+            message.setJMSType(article.getCodeArticle());
+            sender.send(message);
+            System.out.println("Sent article: " + article.getCodeArticle());
                 //Thread.sleep(5000);
-           //}
         }catch (JMSException exception) {
             exception.printStackTrace();
-//        } catch (InterruptedException ex) {
-//            Logger.getLogger(JMSSender.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NamingException ex) {
+            Logger.getLogger(JMSProvider.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             // close the context
             if (context != null) {
@@ -76,7 +78,7 @@ public class JMSSender {
             }
 
             // close the connection
-            if (!openConnexion && connection != null) {
+            if (connection != null) {
                 try {
                     connection.close();
                 } catch (JMSException exception) {

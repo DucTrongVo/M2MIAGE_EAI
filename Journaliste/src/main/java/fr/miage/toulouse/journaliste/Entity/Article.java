@@ -6,26 +6,36 @@
 package fr.miage.toulouse.journaliste.Entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
- *
+ *x
  * @author trongvo
  */
 public class Article implements Serializable{
+    private static final long serialVersionUID = 1L;
+    
     private String nameArticle;
     private String codeArticle;
     private String nameAuthor;
-    private String[] keywords;
+    private List<String> keywords;
     private String content;
     private int numArticle;
+    //private String codeTitre;
+    private LocalDateTime date;
     private static int numGlobalArticle = 0;
+    //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
-    public Article(String nameArticle, String codeArticle, String nameAuthor, String[] keywords, String content) {
+    public Article(String nameArticle, String codeArticle, String nameAuthor, List<String> keywords, String content) {
         this.nameArticle = nameArticle;
         this.codeArticle = codeArticle;
         this.nameAuthor = nameAuthor;
         this.keywords = keywords;
         this.content = content;
+        //this.codeTitre = codeTitre;
+        this.date = LocalDateTime.now();
         this.numArticle = Article.numGlobalArticle + 1;
     }
 
@@ -53,11 +63,11 @@ public class Article implements Serializable{
         this.nameAuthor = nameAuthor;
     }
 
-    public String[] getKeywords() {
+    public List<String> getKeywords() {
         return keywords;
     }
 
-    public void setKeywords(String[] keywords) {
+    public void setKeywords(List<String> keywords) {
         this.keywords = keywords;
     }
 
@@ -76,5 +86,22 @@ public class Article implements Serializable{
     public void setNumArticle(int numArticle) {
         this.numArticle = numArticle;
     }
+
+//    public String getCodeTitre() {
+//        return codeTitre;
+//    }
+//
+//    public void setCodeTitre(String codeTitre) {
+//        this.codeTitre = codeTitre;
+//    }
     
+    public LocalDateTime getDate(){
+        return this.date;
+    }
+    
+    @Override
+    public String toString(){
+        return "Code article : "+this.getCodeArticle()+" - Name article : "+this.getNameArticle()
+                +" - Author : "+this.getNameAuthor()+" - Date création : "+this.getDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
+    }
 }
