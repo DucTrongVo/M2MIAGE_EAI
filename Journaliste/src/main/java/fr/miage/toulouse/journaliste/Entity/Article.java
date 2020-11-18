@@ -7,6 +7,7 @@ package fr.miage.toulouse.journaliste.Entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -22,17 +23,18 @@ public class Article implements Serializable{
     private List<String> keywords;
     private String content;
     private int numArticle;
-    private String codeTitre;
+    //private String codeTitre;
     private LocalDateTime date;
     private static int numGlobalArticle = 0;
+    //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
-    public Article(String nameArticle, String codeArticle, String nameAuthor, List<String> keywords, String content, String codeTitre) {
+    public Article(String nameArticle, String codeArticle, String nameAuthor, List<String> keywords, String content) {
         this.nameArticle = nameArticle;
         this.codeArticle = codeArticle;
         this.nameAuthor = nameAuthor;
         this.keywords = keywords;
         this.content = content;
-        this.codeTitre = codeTitre;
+        //this.codeTitre = codeTitre;
         this.date = LocalDateTime.now();
         this.numArticle = Article.numGlobalArticle + 1;
     }
@@ -85,13 +87,13 @@ public class Article implements Serializable{
         this.numArticle = numArticle;
     }
 
-    public String getCodeTitre() {
-        return codeTitre;
-    }
-
-    public void setCodeTitre(String codeTitre) {
-        this.codeTitre = codeTitre;
-    }
+//    public String getCodeTitre() {
+//        return codeTitre;
+//    }
+//
+//    public void setCodeTitre(String codeTitre) {
+//        this.codeTitre = codeTitre;
+//    }
     
     public LocalDateTime getDate(){
         return this.date;
@@ -99,7 +101,7 @@ public class Article implements Serializable{
     
     @Override
     public String toString(){
-        String res = "Code article : "+this.getCodeArticle()+" - Name article : "+this.getNameArticle();
-        return res;
+        return "Code article : "+this.getCodeArticle()+" - Name article : "+this.getNameArticle()
+                +" - Author : "+this.getNameAuthor()+" - Date création : "+this.getDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
     }
 }

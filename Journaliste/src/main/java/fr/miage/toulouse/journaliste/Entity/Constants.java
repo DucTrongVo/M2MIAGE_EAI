@@ -13,9 +13,16 @@ public final class Constants {
     public static final String FACTORYNAME = "jms/__defaultConnectionFactory";
     
     public static final String DESTNAME_ARCHIVE_RECEIVER = "JMSReceiverQueue";
-    //public static final String DESTNAME_ARCHIVE_RECEIVER = "JournalisteVersArchiveArticles";
     
     public static final String DESTNAME_ARCHIVE_PRODUCER = "JMSSenderQueue";
+    
+    public static final String DESTNAME_MSP_RECEIVER = "MSPReceiverQueue";
+    
+    public static final String FINAL_ARTICLE = "finalArticle";
+    
+    //public static final String DESTNAME_REC_PRODUCER = "RECSenderQueue";
+    
+    public static final String REC_WANT_ARTICLE = "Show Time!";
     
     public static final String EMPTY_NAME_AUTHOR = "Le nom d'auteur ne doit pas être vide!";
     

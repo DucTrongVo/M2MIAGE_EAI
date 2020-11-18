@@ -7,7 +7,7 @@ package fr.miage.toulouse.redacteurenchef;
 
 import fr.miage.toulouse.journaliste.Entity.Article;
 import fr.miage.toulouse.journaliste.Entity.Constants;
-import java.awt.List;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.jms.Connection;
@@ -34,6 +34,7 @@ public class JMSProvider {
     private String factoryName = Constants.FACTORYNAME;
     private String destNameProducer = Constants.DESTNAME_ARCHIVE_RECEIVER;
     private String destNameReceiver = Constants.DESTNAME_ARCHIVE_PRODUCER;
+    private String destNameMSPProducer = Constants.DESTNAME_MSP_RECEIVER;
     private Destination destProducer = null;
     private Destination destReceiver = null;
     private Session session = null;
@@ -43,7 +44,7 @@ public class JMSProvider {
     
     public JMSProvider(){};
     
-    public void listenToArchiveArticle(){
+    public void listenToArchiveArticle(List<Article> listArticleReceived){
         try {
             //openConnexion = true;
             // create the JNDI initial context.
@@ -64,9 +65,12 @@ public class JMSProvider {
             while(!stopListen){
                 ObjectMessage messageReceive = (ObjectMessage) receiver.receive();
                 if(messageReceive instanceof ObjectMessage){
-                    Article listReceive = (Article) messageReceive.getObject();
-                    System.out.println("REC Received : "+listReceive.getCodeArticle());
-                    stopListen = true;
+                    Article articleReceive = (Article) messageReceive.getObject();
+                    System.out.println("REC Received : "+articleReceive.toString());
+                    listArticleReceived.add(articleReceive);
+                    if(messageReceive.getBooleanProperty(Constants.FINAL_ARTICLE)){
+                        stopListen = true;
+                    }
                 }
             }
         } catch (NamingException ex) {
@@ -112,7 +116,7 @@ public class JMSProvider {
             connection.start();
             
             TextMessage message = session.createTextMessage();
-            message.setText("ARTICLES?");
+            message.setText(Constants.REC_WANT_ARTICLE);
             producer.send(message);
             System.out.println("REC Send question: "+message.getText());
         } catch (NamingException ex) {
@@ -140,7 +144,7 @@ public class JMSProvider {
         }
     }
     
-    public void sendArticles(){
+    public void sendArticlesToMiseSousPresse(List<Article> listArticlesChosen){
         try {
             //openConnexion = true;
             // create the JNDI initial context.
@@ -148,17 +152,20 @@ public class JMSProvider {
             // look up the ConnectionFactory
             factory = (ConnectionFactory) context.lookup(factoryName);
             // look up the Destination
-            destReceiver = (Destination) context.lookup(destNameProducer);
+            destProducer = (Destination) context.lookup(destNameMSPProducer);
             // create the connection
             connection = (Connection) factory.createConnection();
             // create the session
             session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
             // create the producer
-            producer = session.createProducer(destReceiver);
+            producer = session.createProducer(destProducer);
             // start the connection, to enable message sends
             connection.start();
-            
-            
+            for(Article article : listArticlesChosen){
+                ObjectMessage objectMessage = session.createObjectMessage(article);
+                producer.send(objectMessage);
+                System.out.println("Send to Mise Sous Presse : "+article.toString());
+            }
             
         } catch (NamingException ex) {
             Logger.getLogger(JMSProvider.class.getName()).log(Level.SEVERE, null, ex);

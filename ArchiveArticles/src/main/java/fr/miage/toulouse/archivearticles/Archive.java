@@ -54,6 +54,25 @@ public class Archive {
         }
     }
 
+    /**
+     * Return a list of article by its topic
+     * @param codeTitre code of theme
+     * @return list of article in a same topic
+     */
+//    public List<Article> getArticleByTitreCode(String codeTitre){
+//        List<Article> listFound = new ArrayList<>();
+//        for(Article article : listArticles){
+//            if(article.getCodeTitre().equals(codeTitre)){
+//                listFound.add(article);
+//            }
+//        }
+//        return listFound;
+//    }
+    
+    /**
+     * Listen for message send from Journaliste and Redacteur En Chef.
+     * Return a liste of article by topic to Redadcteur en Chef on demand
+     */
     public void receiverArticle(){
         Context context = null;
         ConnectionFactory factory = null;
@@ -89,8 +108,7 @@ public class Archive {
             receiver = session.createConsumer(destReceiver);
             // create the producer 
             producer = session.createProducer(destProducer);
-
-            System.out.println("Receiver : "+receiver);
+            
             // start the connection, to enable message receipt
             connection.start();
 
@@ -98,19 +116,27 @@ public class Archive {
                 Message messageReceive = receiver.receive();
                 if(messageReceive instanceof TextMessage){
                     TextMessage mess = (TextMessage) messageReceive;
-                    System.out.println("messageFromREC "+mess.getText());
-                    if(this.listArticles.size() > 0){
-                        ObjectMessage odjectMessage = session.createObjectMessage(this.listArticles.get(listArticles.size()-1));
-                        //ObjectMessage odjectMessage = sessionConsumer.createObjectMessage(this.listArticles.get(0));
-                        producer.send(odjectMessage);
-                        System.out.println("Send to REC : "+listArticles.get(0));
+                    System.out.println("Code Titre received from REC : "+mess.getText());
+                    List<Article> listFound = getListArticles();
+                    if(listFound.size() > 0 && mess.getText().equals(Constants.REC_WANT_ARTICLE)){
+                        for(Article article : listFound){
+                            ObjectMessage objectMessage = session.createObjectMessage(article);
+                            if(article.equals(listFound.get(listFound.size() - 1))){
+                                objectMessage.setBooleanProperty(Constants.FINAL_ARTICLE, true);
+                            }else{
+                                objectMessage.setBooleanProperty(Constants.FINAL_ARTICLE, false);
+                            }
+                            //ObjectMessage objectMessage = sessionConsumer.createObjectMessage(this.listArticles.get(0));
+                            producer.send(objectMessage);
+                            System.out.println("Send to REC : "+article.toString());
+                        }
                     }
                 }
                  
                 else if (messageReceive instanceof ObjectMessage) {
                     ObjectMessage mess = (ObjectMessage) messageReceive;
                     Article articleReceived = (Article) mess.getObject();
-                    System.out.println("Archive Article Received: " + articleReceived.getCodeArticle());
+                    System.out.println("Received from Journaliste : " + articleReceived.toString());
                     this.addNewArticle(articleReceived);
                 }
                 else if (messageReceive != null) {

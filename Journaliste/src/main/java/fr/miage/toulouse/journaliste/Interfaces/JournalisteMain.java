@@ -7,7 +7,7 @@ package fr.miage.toulouse.journaliste.Interfaces;
 
 import fr.miage.toulouse.journaliste.Entity.Article;
 import fr.miage.toulouse.journaliste.Entity.Constants;
-import fr.miage.toulouse.journaliste.Entity.JMSSender;
+import fr.miage.toulouse.journaliste.Entity.JMSProvider;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.Arrays;
@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
  * @author trongvo
  */
 public class JournalisteMain extends javax.swing.JFrame {
-        JMSSender sender;
+        JMSProvider sender;
         
         // les arttributs d'un article
         private String nameArticle;
@@ -27,16 +27,18 @@ public class JournalisteMain extends javax.swing.JFrame {
         private String nameAuthor;
         private List<String> keywords;
         private String content;
-        private String codeTitre;
+//        private String codeTitre;
+//        private String nameTitre;
         
         private String messError;
         private static FocusListener textNomArticleFocusListener;
+//        private static FocusListener textCodeTitreFocusListener;
     /**
      * Creates new form JournalisteMain
      */
     public JournalisteMain() {
         initComponents();
-        this.sender = new JMSSender();
+        this.sender = new JMSProvider();
         textNomArticleFocusListener = new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) { }
@@ -52,7 +54,24 @@ public class JournalisteMain extends javax.swing.JFrame {
                 textFieldCodeArticle.setText(codeArticle);
             }
         };
+//        textCodeTitreFocusListener = new FocusListener() {
+//            @Override
+//            public void focusGained(FocusEvent e) {
+//            }
+//
+//            @Override
+//            public void focusLost(FocusEvent e) {
+//                nameTitre = textFieldNomTitre.getText();
+//                String[] arrayNomTitre = nameTitre.split(" ");
+//                codeTitre="";
+//                for(String name : arrayNomTitre){
+//                    codeTitre += Character.toUpperCase(name.charAt(0));
+//                }
+//                textFieldCodeTitre.setText(codeTitre);
+//            }
+//        };
         this.textFieldNomArticle.addFocusListener(textNomArticleFocusListener);
+       // this.textFieldNomTitre.addFocusListener(textCodeTitreFocusListener);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -70,8 +89,6 @@ public class JournalisteMain extends javax.swing.JFrame {
         textFieldNomArticle = new javax.swing.JTextField();
         jLabelNomArticle1 = new javax.swing.JLabel();
         textFieldCodeArticle = new javax.swing.JTextField();
-        jLabelNomArticle2 = new javax.swing.JLabel();
-        comboBoxTitre = new javax.swing.JComboBox<>();
         jLabelNomkeywords = new javax.swing.JLabel();
         textFieldKeywords = new javax.swing.JTextField();
         jLabelNomkeywords1 = new javax.swing.JLabel();
@@ -106,12 +123,6 @@ public class JournalisteMain extends javax.swing.JFrame {
         jLabelNomArticle1.setToolTipText("");
 
         textFieldCodeArticle.setFont(new java.awt.Font("Ubuntu", 0, 16)); // NOI18N
-
-        jLabelNomArticle2.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
-        jLabelNomArticle2.setText("Thème");
-        jLabelNomArticle2.setToolTipText("");
-
-        comboBoxTitre.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Theme1", "Theme2", "Theme3" }));
 
         jLabelNomkeywords.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
         jLabelNomkeywords.setText("Mots Clés");
@@ -153,32 +164,28 @@ public class JournalisteMain extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabelAuteur, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabelNomArticle, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(35, 35, 35)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(textFieldAuteur, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(textFieldNomArticle, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(33, 33, 33)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabelNomArticle1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabelNomArticle2, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(comboBoxTitre, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(textFieldCodeArticle, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabelNomkeywords, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(35, 35, 35)
-                        .addComponent(textFieldKeywords))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(buttonEnvoyerArticle, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabelNomkeywords, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(35, 35, 35)
+                        .addComponent(textFieldKeywords))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabelNomArticle, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(35, 35, 35)
+                        .addComponent(textFieldNomArticle, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(33, 33, 33)
+                        .addComponent(jLabelNomArticle1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                        .addComponent(textFieldCodeArticle, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabelNomkeywords1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabelAuteur, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(72, 72, 72)
+                                .addComponent(textFieldAuteur, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -189,29 +196,26 @@ public class JournalisteMain extends javax.swing.JFrame {
                 .addGap(25, 25, 25)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelAuteur, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(textFieldAuteur, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelNomArticle2, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(comboBoxTitre, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(textFieldAuteur, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabelNomArticle, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabelNomArticle1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(textFieldCodeArticle))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
+                    .addComponent(jLabelNomArticle1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(textFieldCodeArticle)
+                    .addComponent(jLabelNomArticle, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(textFieldNomArticle))
-                .addGap(27, 27, 27)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelNomkeywords, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(textFieldKeywords))
                 .addGap(1, 1, 1)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jLabelNomkeywords1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28)
+                .addGap(26, 26, 26)
                 .addComponent(buttonEnvoyerArticle, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
+                .addGap(22, 22, 22))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -243,10 +247,18 @@ public class JournalisteMain extends javax.swing.JFrame {
             this.content = textAreaContent.getText();
             this.nameAuthor = textFieldAuteur.getText();
             this.keywords = Arrays.asList(textFieldKeywords.getText().split(";"));
-            this.codeTitre = comboBoxTitre.getSelectedItem().toString();
+            //this.codeTitre = textFieldCodeTitre.getText();
 
-            Article article = new Article(nameArticle, codeArticle, nameAuthor, keywords, content, codeTitre);
+            Article article = new Article(nameArticle, codeArticle, nameAuthor, keywords, content);
+            JOptionPane.showMessageDialog(this, "Article envoyé avec succuès!");
             sender.sendArticle(article);
+            textFieldNomArticle.setText("");
+            textFieldCodeArticle.setText("");
+            textAreaContent.setText("");
+            textFieldAuteur.setText("");
+            textFieldKeywords.setText("");
+//            textFieldNomTitre.setText("");
+//            textFieldCodeTitre.setText("");         
         }else{
             JOptionPane.showMessageDialog(this, messError, "Inane warning", JOptionPane.WARNING_MESSAGE);
         }
@@ -254,11 +266,11 @@ public class JournalisteMain extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonEnvoyerArticleActionPerformed
 
     private void textFieldNomArticleFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_textFieldNomArticleFocusLost
-        this.nameArticle = textFieldNomArticle.getText();
-        String[] arrayNomArticle = this.nameArticle.split(" ");
-        for(String name : arrayNomArticle){
-            this.codeArticle += name.charAt(0);
-        }
+//        this.nameArticle = textFieldNomArticle.getText();
+//        String[] arrayNomArticle = this.nameArticle.split(" ");
+//        for(String name : arrayNomArticle){
+//            this.codeArticle += name.charAt(0);
+//        }
     }//GEN-LAST:event_textFieldNomArticleFocusLost
 
     private boolean checkValidation(){
@@ -320,12 +332,10 @@ public class JournalisteMain extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonEnvoyerArticle;
-    private javax.swing.JComboBox<String> comboBoxTitre;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelAuteur;
     private javax.swing.JLabel jLabelNomArticle;
     private javax.swing.JLabel jLabelNomArticle1;
-    private javax.swing.JLabel jLabelNomArticle2;
     private javax.swing.JLabel jLabelNomkeywords;
     private javax.swing.JLabel jLabelNomkeywords1;
     private javax.swing.JPanel jPanel1;

@@ -23,7 +23,7 @@ import javax.jms.Session;
  * Classe d'objet qui effectue l'envoie des articles
  * @author trongvo
  */
-public class JMSSender {
+public class JMSProvider {
     private Context context = null;
     private ConnectionFactory factory = null;
     private Connection connection = null;
@@ -36,7 +36,7 @@ public class JMSSender {
     // attribut détermine si on va fermer la connexion (openConnexion = false)
     //private boolean openConnexion;
 
-    public JMSSender(){
+    public JMSProvider(){
     }
     
     public void sendArticle(Article article){
@@ -66,7 +66,7 @@ public class JMSSender {
         }catch (JMSException exception) {
             exception.printStackTrace();
         } catch (NamingException ex) {
-            Logger.getLogger(JMSSender.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(JMSProvider.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             // close the context
             if (context != null) {

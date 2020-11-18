@@ -5,20 +5,39 @@
  */
 package fr.miage.toulouse.Interfaces;
 
+import fr.miage.toulouse.journaliste.Entity.Article;
 import fr.miage.toulouse.redacteurenchef.JMSProvider;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author trongvo
  */
 public class RedacteurEnChefMain extends javax.swing.JFrame {
+    private List<Article> listArticlesReceived;
     private JMSProvider jmsProvider;
+    private DefaultTableModel tableArticleReceiveModel = new DefaultTableModel();
+    private final String[] tableArticleReceivedHeaders = {"Choisir", "Nom Artcile", "Code Article", "Auteur", "Contenu", "Date Création"};
     /**
      * Creates new form RedacteurEnChefMain
      */
     public RedacteurEnChefMain() {
         initComponents();
         jmsProvider = new JMSProvider();
+        tableArticleReceiveModel.setColumnIdentifiers(tableArticleReceivedHeaders);
+        jTableArticlesReceived.setModel(tableArticleReceiveModel);
+    }
+    
+    private void refillTableArticlesReceived(){
+        tableArticleReceiveModel.setRowCount(0);
+        for(Article article : listArticlesReceived){
+            tableArticleReceiveModel.addRow(new Object[]{Boolean.FALSE,
+                    article.getNameArticle(), article.getCodeArticle(),
+                    article.getNameAuthor(), article.getContent(), article.getDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"))});
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -29,55 +48,80 @@ public class RedacteurEnChefMain extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        tabSendArticles = new javax.swing.JTabbedPane();
+        tabGetArticle = new javax.swing.JPanel();
         buttonGetArticles = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTableArticlesReceived = new javax.swing.JTable();
+        jPanel1 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("Test");
-
         buttonGetArticles.setText("Recuperer les articles");
+        buttonGetArticles.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
+        buttonGetArticles.setPreferredSize(new java.awt.Dimension(20, 20));
         buttonGetArticles.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonGetArticlesActionPerformed(evt);
             }
         });
 
+        jTableArticlesReceived.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane1.setViewportView(jTableArticlesReceived);
+
+        javax.swing.GroupLayout tabGetArticleLayout = new javax.swing.GroupLayout(tabGetArticle);
+        tabGetArticle.setLayout(tabGetArticleLayout);
+        tabGetArticleLayout.setHorizontalGroup(
+            tabGetArticleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(tabGetArticleLayout.createSequentialGroup()
+                .addGap(33, 33, 33)
+                .addGroup(tabGetArticleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(buttonGetArticles, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 963, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(77, Short.MAX_VALUE))
+        );
+        tabGetArticleLayout.setVerticalGroup(
+            tabGetArticleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(tabGetArticleLayout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addComponent(buttonGetArticles, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(169, Short.MAX_VALUE))
+        );
+
+        tabSendArticles.addTab("Demander Nouveaux Articles", tabGetArticle);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(22, 22, 22)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(265, 265, 265)
-                        .addComponent(buttonGetArticles)))
-                .addContainerGap(434, Short.MAX_VALUE))
+            .addGap(0, 1073, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(40, 40, 40)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(37, 37, 37)
-                .addComponent(buttonGetArticles)
-                .addContainerGap(374, Short.MAX_VALUE))
+            .addGap(0, 569, Short.MAX_VALUE)
         );
+
+        tabSendArticles.addTab("Envoyer Articles vers Mise Sous Presse", jPanel1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(tabSendArticles)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tabSendArticles, javax.swing.GroupLayout.PREFERRED_SIZE, 606, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -85,8 +129,10 @@ public class RedacteurEnChefMain extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonGetArticlesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonGetArticlesActionPerformed
+        listArticlesReceived = new ArrayList<>();
         jmsProvider.getArticle();
-        jmsProvider.listenToArchiveArticle();
+        jmsProvider.listenToArchiveArticle(listArticlesReceived);
+        refillTableArticlesReceived();
     }//GEN-LAST:event_buttonGetArticlesActionPerformed
 
     /**
@@ -126,7 +172,10 @@ public class RedacteurEnChefMain extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonGetArticles;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTableArticlesReceived;
+    private javax.swing.JPanel tabGetArticle;
+    private javax.swing.JTabbedPane tabSendArticles;
     // End of variables declaration//GEN-END:variables
 }
