@@ -19,19 +19,20 @@ import javax.swing.JOptionPane;
  * @author trongvo
  */
 public class JournalisteMain extends javax.swing.JFrame {
-        JMSProvider sender;
-        
-        // les arttributs d'un article
-        private String nameArticle;
-        private String codeArticle;
-        private String nameAuthor;
-        private List<String> keywords;
-        private String content;
+    private static final long serialVersionUID = 1913625705010153425L;
+    JMSProvider sender;
+
+    // les arttributs d'un article
+    private String nameArticle;
+    private String codeArticle;
+    private String nameAuthor;
+    private List<String> keywords;
+    private String content;
 //        private String codeTitre;
 //        private String nameTitre;
-        
-        private String messError;
-        private static FocusListener textNomArticleFocusListener;
+
+    private String messError;
+    private static FocusListener textNomArticleFocusListener;
 //        private static FocusListener textCodeTitreFocusListener;
     /**
      * Creates new form JournalisteMain

@@ -144,7 +144,7 @@ public class JMSProvider {
         }
     }
     
-    public void sendArticlesToMiseSousPresse(List<Article> listArticlesChosen){
+    public void sendArticlesToMiseSousPresse(List<Article> listArticlesChosen, String codeTheme){
         try {
             //openConnexion = true;
             // create the JNDI initial context.
@@ -163,8 +163,9 @@ public class JMSProvider {
             connection.start();
             for(Article article : listArticlesChosen){
                 ObjectMessage objectMessage = session.createObjectMessage(article);
+                objectMessage.setStringProperty("codeTheme", codeTheme);
                 producer.send(objectMessage);
-                System.out.println("Send to Mise Sous Presse : "+article.toString());
+                System.out.println("Send to Mise Sous Presse : "+article.toString()+" - codeTheme : "+codeTheme);
             }
             
         } catch (NamingException ex) {

@@ -6,10 +6,14 @@
 package fr.miage.toulouse.Interfaces;
 
 import fr.miage.toulouse.journaliste.Entity.Article;
+import fr.miage.toulouse.journaliste.Entity.Constants;
 import fr.miage.toulouse.redacteurenchef.JMSProvider;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -18,25 +22,73 @@ import javax.swing.table.DefaultTableModel;
  */
 public class RedacteurEnChefMain extends javax.swing.JFrame {
     private List<Article> listArticlesReceived;
+    private List<Article> listArticlesChosen;
     private JMSProvider jmsProvider;
-    private DefaultTableModel tableArticleReceiveModel = new DefaultTableModel();
     private final String[] tableArticleReceivedHeaders = {"Choisir", "Nom Artcile", "Code Article", "Auteur", "Contenu", "Date Création"};
+    private DefaultTableModel tableArticleReceiveModel = new DefaultTableModel(){
+            @Override
+            public Class getColumnClass(int columnIndex) {
+               return columnIndex == 0 ? Boolean.class : super.getColumnClass(columnIndex);
+         }
+        };;
+    
     /**
      * Creates new form RedacteurEnChefMain
      */
     public RedacteurEnChefMain() {
         initComponents();
         jmsProvider = new JMSProvider();
+        listArticlesReceived = new ArrayList<>();
+        listArticlesChosen = new ArrayList<>();
         tableArticleReceiveModel.setColumnIdentifiers(tableArticleReceivedHeaders);
         jTableArticlesReceived.setModel(tableArticleReceiveModel);
+        resizeTableArticle();
+        // Test data
+//        listArticlesReceived.add(new Article("Name Article", "AA", "Name Author", new ArrayList<>(Arrays.asList("Content content")), "18/11/2020"));
+//        listArticlesReceived.add(new Article("Name Article", "BB", "Name Author", new ArrayList<>(Arrays.asList("Content content")), "18/11/2020"));
+//        listArticlesReceived.add(new Article("Name Article", "CC", "Name Author", new ArrayList<>(Arrays.asList("Content content")), "18/11/2020"));
+//        tableArticleReceiveModel.addRow(new Object[]{ Boolean.FALSE,
+//                    "Name Article", "AA",
+//                    "Name Author", "Content content", "18/11/2020"});
+//        tableArticleReceiveModel.addRow(new Object[]{ Boolean.FALSE,
+//                    "Name Article", "BB",
+//                    "Name Author", "Content content", "18/11/2020"});
+//        tableArticleReceiveModel.addRow(new Object[]{ Boolean.TRUE,
+//                    "Name Article", "CC",
+//                    "Name Author", "Content content", "18/11/2020"});
     }
     
+    private void resizeTableArticle(){
+        jTableArticlesReceived.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        jTableArticlesReceived.getColumnModel().getColumn(0).setPreferredWidth(90);
+        jTableArticlesReceived.getColumnModel().getColumn(1).setPreferredWidth(140);
+        jTableArticlesReceived.getColumnModel().getColumn(2).setPreferredWidth(120);
+        jTableArticlesReceived.getColumnModel().getColumn(3).setPreferredWidth(140);
+        jTableArticlesReceived.getColumnModel().getColumn(4).setPreferredWidth(350);
+        jTableArticlesReceived.getColumnModel().getColumn(5).setPreferredWidth(160);
+    }
     private void refillTableArticlesReceived(){
         tableArticleReceiveModel.setRowCount(0);
         for(Article article : listArticlesReceived){
             tableArticleReceiveModel.addRow(new Object[]{Boolean.FALSE,
                     article.getNameArticle(), article.getCodeArticle(),
                     article.getNameAuthor(), article.getContent(), article.getDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"))});
+        }
+    }
+    
+    private Article getArticleInListByCode(String codeArticle, List<Article> listArticles){
+        for(Article article : listArticles){
+            if(codeArticle.equals(article.getCodeArticle())){
+                return article;
+            }
+        }
+        return null;
+    }
+    
+    private void fillComboBoxArticleReceived(){
+        comboBoxCodeArticles.removeAllItems();
+        for(Article article : listArticlesReceived){
+            comboBoxCodeArticles.addItem(article.getCodeArticle());
         }
     }
     /**
@@ -53,10 +105,29 @@ public class RedacteurEnChefMain extends javax.swing.JFrame {
         buttonGetArticles = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableArticlesReceived = new javax.swing.JTable();
+        buttonSendArticles = new javax.swing.JButton();
+        jLabelCodeThem = new javax.swing.JLabel();
+        jComboBoxCodeThem = new javax.swing.JComboBox<>();
         jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        comboBoxCodeArticles = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
+        textFieldNameArticle = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        textFieldCodeArticle = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        textFieldNameAuthor = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        textFieldDateCreation = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        textFieldKeywords = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        textAreaContent = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        buttonGetArticles.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
         buttonGetArticles.setText("Recuperer les articles");
         buttonGetArticles.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
         buttonGetArticles.setPreferredSize(new java.awt.Dimension(20, 20));
@@ -71,10 +142,26 @@ public class RedacteurEnChefMain extends javax.swing.JFrame {
 
             },
             new String [] {
-
+                "Choisir", "Author", "Article", "Code", "Contenu", "Date"
             }
         ));
         jScrollPane1.setViewportView(jTableArticlesReceived);
+
+        buttonSendArticles.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        buttonSendArticles.setText("Envoyer les articles choisis");
+        buttonSendArticles.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
+        buttonSendArticles.setPreferredSize(new java.awt.Dimension(20, 20));
+        buttonSendArticles.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonSendArticlesActionPerformed(evt);
+            }
+        });
+
+        jLabelCodeThem.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        jLabelCodeThem.setText("Choisir le code du Thème :");
+
+        jComboBoxCodeThem.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        jComboBoxCodeThem.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Games", "Science Fiction", "Sicence", "Economic" }));
 
         javax.swing.GroupLayout tabGetArticleLayout = new javax.swing.GroupLayout(tabGetArticle);
         tabGetArticle.setLayout(tabGetArticleLayout);
@@ -84,8 +171,14 @@ public class RedacteurEnChefMain extends javax.swing.JFrame {
                 .addGap(33, 33, 33)
                 .addGroup(tabGetArticleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(buttonGetArticles, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 963, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(77, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1003, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(tabGetArticleLayout.createSequentialGroup()
+                        .addGroup(tabGetArticleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(buttonSendArticles, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelCodeThem, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(10, 10, 10)
+                        .addComponent(jComboBoxCodeThem, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
         tabGetArticleLayout.setVerticalGroup(
             tabGetArticleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -93,24 +186,124 @@ public class RedacteurEnChefMain extends javax.swing.JFrame {
                 .addGap(23, 23, 23)
                 .addComponent(buttonGetArticles, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(169, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25)
+                .addGroup(tabGetArticleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelCodeThem, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBoxCodeThem, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(40, 40, 40)
+                .addComponent(buttonSendArticles, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(44, Short.MAX_VALUE))
         );
 
         tabSendArticles.addTab("Demander Nouveaux Articles", tabGetArticle);
+
+        jLabel1.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        jLabel1.setText("Choisissez un article :");
+
+        comboBoxCodeArticles.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxCodeArticlesActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        jLabel2.setText("Nom d'article :");
+
+        jLabel3.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        jLabel3.setText("Code d'article :");
+
+        jLabel4.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        jLabel4.setText("Nom d'auteur :");
+
+        jLabel5.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        jLabel5.setText("Date de création :");
+
+        jLabel6.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        jLabel6.setText("Mot clés :");
+
+        jLabel7.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        jLabel7.setText("Contenu :");
+
+        textAreaContent.setColumns(20);
+        textAreaContent.setRows(5);
+        jScrollPane2.setViewportView(textAreaContent);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1073, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(28, 28, 28)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(95, 95, 95)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(textFieldNameAuthor, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
+                                    .addComponent(textFieldNameArticle))
+                                .addGap(115, 115, 115)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(56, 56, 56)
+                                        .addComponent(textFieldCodeArticle, javax.swing.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(textFieldDateCreation, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(textFieldKeywords))
+                        .addGap(40, 40, 40))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(56, 56, 56)
+                                .addComponent(comboBoxCodeArticles, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1015, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 569, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comboBoxCodeArticles, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(24, 24, 24)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
+                        .addComponent(textFieldNameArticle))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(textFieldCodeArticle, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(28, 28, 28)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(textFieldNameAuthor, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(textFieldDateCreation, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(30, 30, 30)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(textFieldKeywords, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(58, 58, 58))
         );
 
-        tabSendArticles.addTab("Envoyer Articles vers Mise Sous Presse", jPanel1);
+        tabSendArticles.addTab("Détails Article", jPanel1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -133,7 +326,55 @@ public class RedacteurEnChefMain extends javax.swing.JFrame {
         jmsProvider.getArticle();
         jmsProvider.listenToArchiveArticle(listArticlesReceived);
         refillTableArticlesReceived();
+        fillComboBoxArticleReceived();
     }//GEN-LAST:event_buttonGetArticlesActionPerformed
+
+    private void buttonSendArticlesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSendArticlesActionPerformed
+        if(listArticlesReceived.size() < 1){
+            JOptionPane.showMessageDialog(this, Constants.EMPTY_LIST_ARTICLE_RECEIVED, "Inane warning", JOptionPane.WARNING_MESSAGE);
+        }
+        else{
+            listArticlesChosen = new ArrayList<>();
+            for(int i=0;i<jTableArticlesReceived.getRowCount();i++){
+                if(jTableArticlesReceived.getValueAt(i, 0).equals(Boolean.TRUE)){
+                    listArticlesChosen.add(getArticleInListByCode(jTableArticlesReceived.getValueAt(i, 2).toString(), listArticlesReceived));
+                }
+            }
+            String theme = jComboBoxCodeThem.getSelectedItem().toString();
+            String codeTheme = "";
+            switch(theme){
+                case "Games": codeTheme = "GA";break;
+                case "Science Fiction": codeTheme = "SF";break;
+                case "Science": codeTheme = "SC";break;
+                case "Economic": codeTheme = "EC";break;
+                default: codeTheme = "GA";break;
+            }
+            System.out.println("Theme : "+theme+" - codeTheme : "+codeTheme);
+            System.out.println("ListChosen : "+listArticlesChosen);
+            
+            if(listArticlesChosen.size() < 1){
+                JOptionPane.showMessageDialog(this, Constants.EMPTY_LIST_ARTICLE_CHOSEN, "Inane warning", JOptionPane.WARNING_MESSAGE);
+            } else {
+                jmsProvider.sendArticlesToMiseSousPresse(listArticlesChosen, codeTheme);
+            }
+            
+        }
+        
+    }//GEN-LAST:event_buttonSendArticlesActionPerformed
+
+    private void comboBoxCodeArticlesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxCodeArticlesActionPerformed
+        if(comboBoxCodeArticles.getItemCount()> 0){
+            String codeArticleChosen = comboBoxCodeArticles.getSelectedItem().toString();
+            Article article = getArticleInListByCode(codeArticleChosen, listArticlesReceived);
+            textFieldNameArticle.setText(article.getNameArticle());
+            textFieldCodeArticle.setText(article.getCodeArticle());
+            textFieldNameAuthor.setText(article.getNameAuthor());
+            textFieldDateCreation.setText(article.getDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
+            textFieldKeywords.setText(article.getKeywords().toString().replaceAll("[\\[\\]]", ""));
+            textAreaContent.setText(article.getContent()); 
+        }
+       
+    }//GEN-LAST:event_comboBoxCodeArticlesActionPerformed
 
     /**
      * @param args the command line arguments
@@ -172,10 +413,28 @@ public class RedacteurEnChefMain extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonGetArticles;
+    private javax.swing.JButton buttonSendArticles;
+    private javax.swing.JComboBox<String> comboBoxCodeArticles;
+    private javax.swing.JComboBox<String> jComboBoxCodeThem;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabelCodeThem;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTableArticlesReceived;
     private javax.swing.JPanel tabGetArticle;
     private javax.swing.JTabbedPane tabSendArticles;
+    private javax.swing.JTextArea textAreaContent;
+    private javax.swing.JTextField textFieldCodeArticle;
+    private javax.swing.JTextField textFieldDateCreation;
+    private javax.swing.JTextField textFieldKeywords;
+    private javax.swing.JTextField textFieldNameArticle;
+    private javax.swing.JTextField textFieldNameAuthor;
     // End of variables declaration//GEN-END:variables
 }

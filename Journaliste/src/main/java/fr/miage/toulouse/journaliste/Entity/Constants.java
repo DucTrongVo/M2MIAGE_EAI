@@ -32,4 +32,9 @@ public final class Constants {
     
     public static final String EMPTY_KEYWORDS = "Au moins UN mots clé doit être fourni!";
     
+    public static final String EMPTY_LIST_ARTICLE_RECEIVED = "La liste d'articles reçu est vide!";
+    
+    public static final String EMPTY_LIST_ARTICLE_CHOSEN = "La liste d'articles chosi ne doit pas être vide!";
+    
+    
 }
