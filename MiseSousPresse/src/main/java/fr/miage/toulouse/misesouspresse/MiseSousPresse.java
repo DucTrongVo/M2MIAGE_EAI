@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.jms.Connection;
@@ -31,9 +32,8 @@ import javax.naming.NamingException;
  * @author trongvo
  */
 public class MiseSousPresse extends Thread{
-    private HashMap<String,List<Article>> listArtciles;
+    private HashMap<String,List<Article>> listArticles;
     private List<Publicite> listPublicites;
-    private int nbrArticles;
     
     private Context context = null;
     private ConnectionFactory factory = null;
@@ -48,8 +48,8 @@ public class MiseSousPresse extends Thread{
     //private MessageProducer producer = null;
     private MessageConsumer receiver = null;
 
-    public HashMap<String, List<Article>> getListArtciles() {
-        return listArtciles;
+    public HashMap<String, List<Article>> getListArticles() {
+        return listArticles;
     }
 
     public List<Publicite> getListPublicites() {
@@ -57,13 +57,16 @@ public class MiseSousPresse extends Thread{
     }
 
     public int getNbrArticles() {
-        return nbrArticles;
+        int nb = 0;
+        for(Map.Entry<String, List<Article>> entry : listArticles.entrySet()){
+            nb += entry.getValue().size();
+        }
+        return nb;
     }
     
     public MiseSousPresse(){
-        listArtciles = new HashMap<>();
+        listArticles = new HashMap<>();
         listPublicites = new ArrayList<>();
-        nbrArticles = 0;
     }
     
     @Override
@@ -86,7 +89,6 @@ public class MiseSousPresse extends Thread{
             connection.start();
             while(true){
                 ObjectMessage messageReceive = (ObjectMessage) receiver.receive();
-                nbrArticles = 0;
                 if(messageReceive instanceof ObjectMessage){
                     String typeMessage = messageReceive.getStringProperty(Constants.TYPE);
                     switch (typeMessage) {
@@ -94,12 +96,14 @@ public class MiseSousPresse extends Thread{
                             Article articleReceive = (Article) messageReceive.getObject();
                             System.out.println("MSP Received Article : "+articleReceive.toString());
                             String themeReceive = messageReceive.getStringProperty(Constants.CODE_THEME);
-                            if(listArtciles.containsKey(themeReceive)){
-                                listArtciles.get(themeReceive).add(articleReceive);
+                            if(listArticles.containsKey(themeReceive)){
+                                System.out.println("listArtciles.get(themeReceive) "+listArticles.get(themeReceive));
+                                listArticles.get(themeReceive).add(articleReceive);
+                                System.out.println("Added from existing : "+articleReceive.toString());
                             }else{
-                                listArtciles.put(themeReceive, Arrays.asList(articleReceive));
+                                listArticles.put(themeReceive, new ArrayList<>(Arrays.asList(articleReceive)));
+                                System.out.println("Created list for : "+articleReceive.toString());
                             }
-                            nbrArticles += 1;
                             break;
                         case Constants.PUBLICITE:
                             Publicite pub = (Publicite) messageReceive.getObject();
@@ -112,14 +116,14 @@ public class MiseSousPresse extends Thread{
                     }
                 }
             }
-        } catch (NamingException ex) {
-            Logger.getLogger(MiseSousPresse.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (JMSException ex) {
+        } catch (NamingException | JMSException ex) {
+            System.out.println("Exception : "+ex.toString());
             Logger.getLogger(MiseSousPresse.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             // close the context
             if (context != null) {
                 try {
+                    System.out.println("Close context");
                     context.close();
                 } catch (NamingException exception) {
                     exception.printStackTrace();
@@ -129,6 +133,7 @@ public class MiseSousPresse extends Thread{
             // close the connection
             if (connection != null) {
                 try {
+                    System.out.println("Close connection");
                     connection.close();
                 } catch (JMSException exception) {
                     exception.printStackTrace();

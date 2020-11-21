@@ -16,6 +16,8 @@ import java.util.Map;
  * @author trongvo
  */
 public final class Constants {
+    
+    // BD user : miage20 pass: miage20
     public static final String ARTICLE = "Article";
     
     public static final String CODE_THEME = "codeTheme";
@@ -27,6 +29,8 @@ public final class Constants {
     public static final String DESTNAME_MSP_RECEIVER = "MSPReceiverQueue";
     
     public static final String DESTNAME_MSP_PRODUCER = "MSPProducerQueue";
+    
+    public static final String DESTNAME_MSP_TOPIC = "MSPProducerTopic";
     
     //public static final String DESTNAME_REC_PRODUCER = "RECSenderQueue";
     
@@ -44,6 +48,12 @@ public final class Constants {
     
     public static final String EMPTY_LIST_ARTICLE_CHOSEN = "La liste d'articles chosi ne doit pas être vide!";
     
+    public static final String EMPTY_LIST_PUBS = "La liste des publicités est vide!";
+    
+    public static final String EMPTY_NOM_VOLUME = "Le nom du volume ne doit pas être vide!";
+    
+    public static final String EMPTY_NUM_VOLUME = "Il faut définir un numéro de volume!";
+    
     public static final String FACTORYNAME = "jms/__defaultConnectionFactory";
     
     public static final String FINAL_ARTICLE = "finalArticle";
@@ -51,6 +61,8 @@ public final class Constants {
     public static final String PUBLICITE = "Publicite";
     
     public static final String SEND_FAILED = "Une erreur est parvenu! Impossible d'envoyer";
+    
+    public static final String SUCCES = "Succès!";
     
     public static final String SEND_SUCCEDED = "Envoyé avec succès!";
     
