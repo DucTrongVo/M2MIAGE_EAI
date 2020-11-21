@@ -151,15 +151,15 @@ public class MiseSousPressMain extends javax.swing.JFrame {
             return false;
         }
         
-//        if(listArticleOfVolume.size() == 0){
-//            messError = Constants.EMPTY_LIST_ARTICLE_CHOSEN;
-//            return false;
-//        }
-//        
-//        if(listPubsOfVolume.size() == 0){
-//            messError = Constants.EMPTY_LIST_PUBS;
-//            return false;
-//        }
+        if(listArticleOfVolume.size() == 0){
+            messError = Constants.EMPTY_LIST_ARTICLE_CHOSEN;
+            return false;
+        }
+        
+        if(listPubsOfVolume.size() == 0){
+            messError = Constants.EMPTY_LIST_PUBS;
+            return false;
+        }
         
         return true;
     }
