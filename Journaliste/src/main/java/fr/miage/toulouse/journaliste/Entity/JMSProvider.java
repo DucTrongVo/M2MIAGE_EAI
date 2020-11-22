@@ -5,6 +5,7 @@
  */
 package fr.miage.toulouse.journaliste.Entity;
 
+import fr.miage.toulouse.gestiondto.Constants;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.Context;

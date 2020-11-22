@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @author trongvo
  */
-public class VolumeDTO implements Serializable{
+public class Volume implements Serializable{
     private String codeTitre;
     private String numVolume;
     private String nomVolume;
@@ -24,7 +24,7 @@ public class VolumeDTO implements Serializable{
     private List<Publicite> listPublicites;
     private LocalDateTime dateTime;
 
-    public VolumeDTO(String codeTitre, String numVolume, String nomVolume, List<Article> listArticles, List<Publicite> listPublicites) {
+    public Volume(String codeTitre, String numVolume, String nomVolume, List<Article> listArticles, List<Publicite> listPublicites) {
         this.codeTitre = codeTitre;
         this.numVolume = numVolume;
         this.nomVolume = nomVolume;

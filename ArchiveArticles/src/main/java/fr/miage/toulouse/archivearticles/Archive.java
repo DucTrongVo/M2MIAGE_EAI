@@ -6,7 +6,7 @@
 package fr.miage.toulouse.archivearticles;
 
 import fr.miage.toulouse.journaliste.Entity.Article;
-import fr.miage.toulouse.journaliste.Entity.Constants;
+import fr.miage.toulouse.gestiondto.Constants;
 import java.util.ArrayList;
 import java.util.List;
 import javax.naming.Context;

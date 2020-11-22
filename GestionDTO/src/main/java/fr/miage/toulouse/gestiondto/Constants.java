@@ -3,13 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.miage.toulouse.journaliste.Entity;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+package fr.miage.toulouse.gestiondto;
 
 /**
  *
@@ -20,7 +14,13 @@ public final class Constants {
     // BD user : miage20 pass: miage20
     public static final String ARTICLE = "Article";
     
+    public static final String CODE_TITRE = "codeTitre";
+    public static final String NUM_VOL = "numVolume";
+    public static final String NAME_VOL = "nomVolume";
     public static final String CODE_THEME = "codeTheme";
+    
+    public static final String CREATE_FAILED = "Creation échouée!";
+    public static final String CREATE_SUCCES = "Creation avec succès!";
     
     public static final String DESTNAME_ARCHIVE_RECEIVER = "JMSReceiverQueue";
     
@@ -59,6 +59,8 @@ public final class Constants {
     public static final String FINAL_ARTICLE = "finalArticle";
     
     public static final String PUBLICITE = "Publicite";
+    
+    public static final String[] ROLES = {"USER", "DISTRIBUTOR"};
     
     public static final String SEND_FAILED = "Une erreur est parvenu! Impossible d'envoyer";
     

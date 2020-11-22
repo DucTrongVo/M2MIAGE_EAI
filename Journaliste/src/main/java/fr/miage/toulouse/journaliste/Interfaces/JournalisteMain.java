@@ -6,7 +6,7 @@
 package fr.miage.toulouse.journaliste.Interfaces;
 
 import fr.miage.toulouse.journaliste.Entity.Article;
-import fr.miage.toulouse.journaliste.Entity.Constants;
+import fr.miage.toulouse.gestiondto.Constants;
 import fr.miage.toulouse.journaliste.Entity.JMSProvider;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;

@@ -6,7 +6,7 @@
 package fr.miage.toulouse.gestionpublicite.Interfaces;
 
 import fr.miage.toulouse.gestionpublicite.GestionPublicite;
-import fr.miage.toulouse.journaliste.Entity.Constants;
+import fr.miage.toulouse.gestiondto.Constants;
 import javax.swing.JOptionPane;
 
 /**

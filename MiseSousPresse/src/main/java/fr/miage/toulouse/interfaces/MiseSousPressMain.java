@@ -7,9 +7,9 @@ package fr.miage.toulouse.interfaces;
 
 import fr.miage.toulouse.gestionpublicite.Publicite;
 import fr.miage.toulouse.journaliste.Entity.Article;
-import fr.miage.toulouse.journaliste.Entity.Constants;
+import fr.miage.toulouse.gestiondto.Constants;
 import fr.miage.toulouse.misesouspresse.MiseSousPresse;
-import fr.miage.toulouse.misesouspresse.VolumeDTO;
+import fr.miage.toulouse.misesouspresse.Volume;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +37,7 @@ public class MiseSousPressMain extends javax.swing.JFrame {
     private String nomVolumeCreated;
     private List<Article> listArticleOfVolume;
     private List<Publicite> listPubsOfVolume;
-    private VolumeDTO volumeToSend;
+    private Volume volumeToSend;
     
     private String messError;
     /**
@@ -451,7 +451,7 @@ public class MiseSousPressMain extends javax.swing.JFrame {
     private void buttonCreateVolumeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCreateVolumeActionPerformed
         getInsertValueFromUser();
         if(checkValidate()){
-            volumeToSend = new VolumeDTO(codeVolumeCreated, numVolumeCreated, nomVolumeCreated, listArticleOfVolume, listPubsOfVolume);
+            volumeToSend = new Volume(codeVolumeCreated, numVolumeCreated, nomVolumeCreated, listArticleOfVolume, listPubsOfVolume);
             buttonSendVolume.setVisible(true);
             System.out.println("Volume : "+volumeToSend.toString());
             JOptionPane.showMessageDialog(this, Constants.SUCCES);

@@ -5,6 +5,7 @@
  */
 package fr.miage.toulouse.interfaces;
 
+import fr.miage.toulouse.entities.Article;
 import fr.miage.toulouse.entities.Titre;
 import fr.miage.toulouse.entities.Volume;
 import java.util.ArrayList;
@@ -14,6 +15,9 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 /**
  *
@@ -42,35 +46,36 @@ public class TitreFacade extends AbstractFacade<Titre> implements TitreFacadeLoc
 
     @Override
     public List<Titre> findByNom(String nomTitre) {
-        List<Titre> listTitre = titreFacadeLocal.findAll();
-        List<Titre> listFound = new ArrayList<>();
-        for(Titre titre : listTitre){
-            if(titre.getNomTitre().contains(nomTitre)){
-                listFound.add(titre);
-            }
-        }
-        return listFound;
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Titre> cq = cb.createQuery(Titre.class);
+        Root<Titre> root = cq.from(Titre.class);
+        cq.where(
+            cb.and(
+                cb.like(cb.upper(root.get("nomTitre").as(String.class)), nomTitre.toUpperCase())
+            )
+        );
+        return getEntityManager().createQuery(cq).getResultList();
     }
 
-    @Override
-    public List<Titre> findByKeywords(String keywords) {
-        List<Titre> listTitres = titreFacadeLocal.findAll();
-        List<Titre> listTitresFound = new ArrayList<>();
-        List<String> listKeysReceived = Arrays.asList(keywords.split(";"));
-        for(Titre titre : listTitres){
-            List<String> cloneListKey = new ArrayList<>(listKeysReceived);
-            cloneListKey.retainAll(getKeywords(titre));
-            if(cloneListKey.size() > 0){
-                listTitresFound.add(titre);
-            }
-        }
-        
-        return listTitresFound;
-    }
-
-    @Override
-    public List<String> getKeywords(Titre titre) {
-        List<String> listKeywords = new ArrayList<>();
+//    @Override
+//    public List<Titre> findByKeywords(String keywords) {
+//        List<Titre> listTitres = titreFacadeLocal.findAll();
+//        List<Titre> listTitresFound = new ArrayList<>();
+//        List<String> listKeysReceived = Arrays.asList(keywords.split(";"));
+//        for(Titre titre : listTitres){
+//            List<String> cloneListKey = new ArrayList<>(listKeysReceived);
+//            cloneListKey.retainAll(getKeywords(titre));
+//            if(cloneListKey.size() > 0){
+//                listTitresFound.add(titre);
+//            }
+//        }
+//        
+//        return listTitresFound;
+//    }
+//
+//    @Override
+//    public List<String> getKeywords(Titre titre) {
+//        List<String> listKeywords = new ArrayList<>();
 //        for(Volume volume : volumeFacadeLocal.findVolumeByCodeTitre(titre.getCodeTitre())){
 //            for(Article article : volume.getListArticles()){
 //                List<String> keywords = article.getKeywords();
@@ -81,6 +86,6 @@ public class TitreFacade extends AbstractFacade<Titre> implements TitreFacadeLoc
 //                }
 //            }
 //        }
-        return listKeywords;
-    }
+//        return listKeywords;
+//    }
 }

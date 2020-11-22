@@ -6,7 +6,7 @@
 package fr.miage.toulouse.Interfaces;
 
 import fr.miage.toulouse.journaliste.Entity.Article;
-import fr.miage.toulouse.journaliste.Entity.Constants;
+import fr.miage.toulouse.gestiondto.Constants;
 import fr.miage.toulouse.redacteurenchef.JMSProvider;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;

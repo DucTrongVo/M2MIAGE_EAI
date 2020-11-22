@@ -5,7 +5,7 @@
  */
 package fr.miage.toulouse.gestionpublicite;
 
-import fr.miage.toulouse.journaliste.Entity.Constants;
+import fr.miage.toulouse.gestiondto.Constants;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;

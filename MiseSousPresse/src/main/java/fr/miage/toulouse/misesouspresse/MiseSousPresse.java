@@ -7,7 +7,7 @@ package fr.miage.toulouse.misesouspresse;
 
 import fr.miage.toulouse.gestionpublicite.Publicite;
 import fr.miage.toulouse.journaliste.Entity.Article;
-import fr.miage.toulouse.journaliste.Entity.Constants;
+import fr.miage.toulouse.gestiondto.Constants;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -39,13 +39,13 @@ public class MiseSousPresse extends Thread{
     private ConnectionFactory factory = null;
     private Connection connection = null;
     private String factoryName = Constants.FACTORYNAME;
-    //private String destNameProducer = Constants.DESTNAME_ARCHIVE_RECEIVER;
+    private String destNameProducerTopic = Constants.DESTNAME_MSP_TOPIC;
     private String destNameReceiver = Constants.DESTNAME_MSP_RECEIVER;
     //private String destNameRECProducer = Constants.DESTNAME_ARCHIVE_PRODUCER;
-    //private Destination destProducer = null;
+    private Destination destProducerTopic = null;
     private Destination destReceiver = null;
     private Session session = null;
-    //private MessageProducer producer = null;
+    private MessageProducer producerTopic = null;
     private MessageConsumer receiver = null;
 
     public HashMap<String, List<Article>> getListArticles() {
@@ -95,7 +95,7 @@ public class MiseSousPresse extends Thread{
                         case Constants.ARTICLE:
                             Article articleReceive = (Article) messageReceive.getObject();
                             System.out.println("MSP Received Article : "+articleReceive.toString());
-                            String themeReceive = messageReceive.getStringProperty(Constants.CODE_THEME);
+                            String themeReceive = messageReceive.getStringProperty(Constants.CODE_TITRE);
                             if(listArticles.containsKey(themeReceive)){
                                 System.out.println("listArtciles.get(themeReceive) "+listArticles.get(themeReceive));
                                 listArticles.get(themeReceive).add(articleReceive);
@@ -116,6 +116,55 @@ public class MiseSousPresse extends Thread{
                     }
                 }
             }
+        } catch (NamingException | JMSException ex) {
+            System.out.println("Exception : "+ex.toString());
+            Logger.getLogger(MiseSousPresse.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            // close the context
+            if (context != null) {
+                try {
+                    System.out.println("Close context");
+                    context.close();
+                } catch (NamingException exception) {
+                    exception.printStackTrace();
+                }
+            }
+
+            // close the connection
+            if (connection != null) {
+                try {
+                    System.out.println("Close connection");
+                    connection.close();
+                } catch (JMSException exception) {
+                    exception.printStackTrace();
+                }
+            }
+        }
+    }
+    
+    public void sendVolumeToTopic(Volume volume){
+        try {
+            //openConnexion = true;
+            // create the JNDI initial context.
+            context = new InitialContext();
+            // look up the ConnectionFactory
+            factory = (ConnectionFactory) context.lookup(factoryName);
+            // look up the Destination
+            destProducerTopic = (Destination) context.lookup(destNameProducerTopic);
+            // create the connection
+            connection = (Connection) factory.createConnection();
+            // create the session
+            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            // create the producer
+            producerTopic = session.createProducer(destProducerTopic);
+            // start the connection, to enable message sends
+            connection.start();
+            ObjectMessage objectMessage = (ObjectMessage) session.createObjectMessage();
+            
+            objectMessage.setStringProperty(Constants.CODE_TITRE, volume.getCodeTitre());
+            objectMessage.setStringProperty(Constants.NUM_VOL, volume.getNumVolume());
+            objectMessage.setStringProperty(Constants.NAME_VOL, volume.getNomVolume());
+            //objectMessage.set
         } catch (NamingException | JMSException ex) {
             System.out.println("Exception : "+ex.toString());
             Logger.getLogger(MiseSousPresse.class.getName()).log(Level.SEVERE, null, ex);

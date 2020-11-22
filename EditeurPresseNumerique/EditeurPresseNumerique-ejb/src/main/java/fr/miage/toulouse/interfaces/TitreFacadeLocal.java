@@ -31,9 +31,9 @@ public interface TitreFacadeLocal {
     
     List<Titre> findByNom(String nomTitre);
     
-    List<String> getKeywords(Titre titre);
-    
-    List<Titre> findByKeywords(String keywords );
+//    List<String> getKeywords(Titre titre);
+//    
+//    List<Titre> findByKeywords(String keywords );
 
     int count();
     

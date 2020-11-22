@@ -5,13 +5,19 @@
  */
 package fr.miage.toulouse.interfaces;
 
+import fr.miage.toulouse.entities.Article;
+import fr.miage.toulouse.entities.Publicite;
 import fr.miage.toulouse.entities.Volume;
-import java.util.ArrayList;
+import fr.miage.toulouse.gestiondto.Constants;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 /**
  *
@@ -36,27 +42,44 @@ public class VolumeFacade extends AbstractFacade<Volume> implements VolumeFacade
     }
 
     @Override
-    public Volume findVolumeByNumber(String numVolume) {
-        List<Volume> listVolumes = volumeFacadeLocal.findAll();
-        for(Volume volume : listVolumes){
-            if(volume.getNumVolume().equals(numVolume)){
-                return volume;
-            }
-        }
-        return null;
+    public Volume findVolumeByNumber(String numVolume, String codeTitre) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Volume> cq = cb.createQuery(Volume.class);
+        Root<Volume> root = cq.from(Volume.class);
+        cq.where(
+            cb.and(
+                cb.equal(cb.upper(root.get("numVolume").as(String.class)), numVolume.toUpperCase()),
+                cb.equal(cb.upper(root.get("codeTitre").as(String.class)), codeTitre.toUpperCase())
+            )
+        );
+       
+        return getEntityManager().createQuery(cq).getSingleResult();
     }
 
+//    @Override
+//    public List<Volume> findVolumeByCodeTitre(String codeTitre) {
+//        List<Volume> listVolume = volumeFacadeLocal.findAll();
+//        List<Volume> listVolumeFound = new ArrayList<>();
+//        
+//        for(Volume volume : listVolume){
+//            if(volume.getCodeTitre().equals(codeTitre)){
+//                listVolumeFound.add(volume);
+//            }
+//        }
+//        return listVolumeFound;
+//    }
+
     @Override
-    public List<Volume> findVolumeByCodeTitre(String codeTitre) {
-        List<Volume> listVolume = volumeFacadeLocal.findAll();
-        List<Volume> listVolumeFound = new ArrayList<>();
-        
-        for(Volume volume : listVolume){
-            if(volume.getCodeTitre().equals(codeTitre)){
-                listVolumeFound.add(volume);
-            }
+    public Volume createVolume(String codeTitre, String numVolume, String nomVolume, List<Article> listArticles, List<Publicite> listPublicites) {
+        try{
+            return findVolumeByNumber(numVolume, codeTitre);
+        }catch(NoResultException e){
+            Volume volume = new Volume(codeTitre, numVolume, nomVolume, listArticles, listPublicites);
+            this.create(volume);
+            System.out.println(Constants.CREATE_SUCCES);
+            System.out.println("Create "+volume.toString());
+            return volume;
         }
-        return listVolumeFound;
     }
     
 }

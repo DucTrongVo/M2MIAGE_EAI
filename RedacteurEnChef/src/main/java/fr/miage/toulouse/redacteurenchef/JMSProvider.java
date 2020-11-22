@@ -6,7 +6,7 @@
 package fr.miage.toulouse.redacteurenchef;
 
 import fr.miage.toulouse.journaliste.Entity.Article;
-import fr.miage.toulouse.journaliste.Entity.Constants;
+import fr.miage.toulouse.gestiondto.Constants;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -164,7 +164,7 @@ public class JMSProvider {
             connection.start();
             for(Article article : listArticlesChosen){
                 ObjectMessage objectMessage = session.createObjectMessage(article);
-                objectMessage.setStringProperty(Constants.CODE_THEME, codeTheme);
+                objectMessage.setStringProperty(Constants.CODE_TITRE, codeTheme);
                 objectMessage.setStringProperty(Constants.TYPE, Constants.ARTICLE);
                 producer.send(objectMessage);
                 System.out.println("Send to Mise Sous Presse : "+article.toString()+" - codeTheme : "+codeTheme);

@@ -28,20 +28,20 @@ public class Volume implements Serializable {
     private String codeTitre;
     private String numVolume;
     private String nomVolume;
-//    private List<Article> listArticles;
-//    private List<Publicite> listPublicites;
+    private List<Article> listArticles;
+    private List<Publicite> listPublicites;
     private LocalDateTime dateTime;
 
     public Volume() {
     }
 
-//    public Volume(String codeTitre, String numVolume, String nomVolume, List<Article> listArticles, List<Publicite> listPublicites) {
-//        this.codeTitre = codeTitre;
-//        this.numVolume = numVolume;
-//        this.nomVolume = nomVolume;
-//        this.listArticles = listArticles;
-//        this.listPublicites = listPublicites;
-//    }
+    public Volume(String codeTitre, String numVolume, String nomVolume, List<Article> listArticles, List<Publicite> listPublicites) {
+        this.codeTitre = codeTitre;
+        this.numVolume = numVolume;
+        this.nomVolume = nomVolume;
+        this.listArticles = listArticles;
+        this.listPublicites = listPublicites;
+    }
 
     public String getCodeTitre() {
         return codeTitre;
@@ -67,21 +67,21 @@ public class Volume implements Serializable {
         this.nomVolume = nomVolume;
     }
 
-//    public List<Article> getListArticles() {
-//        return listArticles;
-//    }
-//
-//    public void setListArticles(List<Article> listArticles) {
-//        this.listArticles = listArticles;
-//    }
-//
-//    public List<Publicite> getListPublicites() {
-//        return listPublicites;
-//    }
-//
-//    public void setListPublicites(List<Publicite> listPublicites) {
-//        this.listPublicites = listPublicites;
-//    }
+    public List<Article> getListArticles() {
+        return listArticles;
+    }
+
+    public void setListArticles(List<Article> listArticles) {
+        this.listArticles = listArticles;
+    }
+
+    public List<Publicite> getListPublicites() {
+        return listPublicites;
+    }
+
+    public void setListPublicites(List<Publicite> listPublicites) {
+        this.listPublicites = listPublicites;
+    }
 
     public LocalDateTime getDateTime() {
         return dateTime;
@@ -123,8 +123,8 @@ public class Volume implements Serializable {
     @Override
     public String toString() {
         return "Code du Theme : "+this.codeTitre+" - Numéro du Volume : "+this.numVolume + " - Nom du Volume : "+this.nomVolume
-                +" - Date de création : "+this.dateTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss"));
-//                +" - Nombre d'article : "+listArticles.size()+" - Nombre de publicité : "+listPublicites.size();
+                +" - Date de création : "+this.dateTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss"))
+                +" - Nombre d'article : "+listArticles.size()+" - Nombre de publicité : "+listPublicites.size();
     }
     
 }
