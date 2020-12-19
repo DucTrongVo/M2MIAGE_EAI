@@ -6,6 +6,7 @@
 package fr.miage.toulouse.interfaces;
 
 import fr.miage.toulouse.entities.Article;
+import java.time.LocalDate;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -30,7 +31,7 @@ public interface ArticleFacadeLocal {
     
     Article findByCodeArticle(String codeArticle);
     
-    Article createArticle(String nameArticle, String codeArticle, String nameAuthor, List<String> keywords, String content);
+    Article createArticle(String nameArticle, String codeArticle, String nameAuthor, List<String> keywords, String content, String date);
 
     int count();
     

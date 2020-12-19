@@ -3,27 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.miage.toulouse.entities;
+package fr.miage.toulouse.gestiondto;
 
-import fr.miage.toulouse.gestiondto.Constants;
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 /**
  *
  * @author trongvo
  */
-@Entity
-public class Abonnement implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class AbonnementDTO {
     private Long id;
     private String idUtilisateur;
     private String codeTitre;
@@ -31,15 +20,21 @@ public class Abonnement implements Serializable {
     private int durationInWeeks;
     private String dateBegin;
 
-    public Abonnement() {
-    }
-
-    public Abonnement(String idUtilisateur, String codeTitre, int numberOfCopies, int durationInWeeks) {
+    public AbonnementDTO(){};
+    public AbonnementDTO(String idUtilisateur, String codeTitre, int numberOfCopies, int durationInWeeks) {
         this.idUtilisateur = idUtilisateur;
         this.codeTitre = codeTitre;
         this.numberOfCopies = numberOfCopies;
         this.durationInWeeks = durationInWeeks;
         this.dateBegin = LocalDate.now().format(DateTimeFormatter.ofPattern(Constants.DATE_FORMAT));
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getIdUtilisateur() {
@@ -54,8 +49,8 @@ public class Abonnement implements Serializable {
         return codeTitre;
     }
 
-    public void setCodeTitre(String idTitre) {
-        this.codeTitre = idTitre;
+    public void setCodeTitre(String codeTitre) {
+        this.codeTitre = codeTitre;
     }
 
     public int getNumberOfCopies() {
@@ -80,39 +75,6 @@ public class Abonnement implements Serializable {
 
     public void setDateBegin(String dateBegin) {
         this.dateBegin = dateBegin;
-    }
-    
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Abonnement)) {
-            return false;
-        }
-        Abonnement other = (Abonnement) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "Abonnement : id=" + id;
     }
     
 }

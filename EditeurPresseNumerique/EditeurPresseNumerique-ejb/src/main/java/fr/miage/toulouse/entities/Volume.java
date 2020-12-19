@@ -5,14 +5,16 @@
  */
 package fr.miage.toulouse.entities;
 
+import fr.miage.toulouse.gestiondto.Constants;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -28,19 +30,22 @@ public class Volume implements Serializable {
     private String codeTitre;
     private String numVolume;
     private String nomVolume;
+    @OneToMany
     private List<Article> listArticles;
+    @OneToMany
     private List<Publicite> listPublicites;
-    private LocalDateTime dateTime;
+    private String dateTime;
 
     public Volume() {
     }
 
-    public Volume(String codeTitre, String numVolume, String nomVolume, List<Article> listArticles, List<Publicite> listPublicites) {
+    public Volume(String codeTitre, String numVolume, String nomVolume, List<Article> listArticles, List<Publicite> listPublicites, String dateTime) {
         this.codeTitre = codeTitre;
         this.numVolume = numVolume;
         this.nomVolume = nomVolume;
         this.listArticles = listArticles;
         this.listPublicites = listPublicites;
+        this.dateTime = dateTime;
     }
 
     public String getCodeTitre() {
@@ -83,11 +88,11 @@ public class Volume implements Serializable {
         this.listPublicites = listPublicites;
     }
 
-    public LocalDateTime getDateTime() {
+    public String getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
+    public void setDateTime(String dateTime) {
         this.dateTime = dateTime;
     }
     
@@ -123,7 +128,7 @@ public class Volume implements Serializable {
     @Override
     public String toString() {
         return "Code du Theme : "+this.codeTitre+" - Numéro du Volume : "+this.numVolume + " - Nom du Volume : "+this.nomVolume
-                +" - Date de création : "+this.dateTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss"))
+                +" - Date de création : "+this.dateTime
                 +" - Nombre d'article : "+listArticles.size()+" - Nombre de publicité : "+listPublicites.size();
     }
     

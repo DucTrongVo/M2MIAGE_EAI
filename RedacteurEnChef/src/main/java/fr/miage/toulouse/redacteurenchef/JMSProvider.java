@@ -7,6 +7,7 @@ package fr.miage.toulouse.redacteurenchef;
 
 import fr.miage.toulouse.journaliste.Entity.Article;
 import fr.miage.toulouse.gestiondto.Constants;
+import fr.miage.toulouse.misesouspresse.Volume;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,7 +28,7 @@ import javax.naming.NamingException;
  *
  * @author trongvo
  */
-public class JMSProvider {
+public class JMSProvider extends Thread{
     private Context context = null;
     private ConnectionFactory factory = null;
     private Connection connection = null;
@@ -44,6 +45,54 @@ public class JMSProvider {
     
     public JMSProvider(){};
     
+    @Override
+    public void run(){
+        try {
+            //openConnexion = true;
+            // create the JNDI initial context.
+            context = new InitialContext();
+            // look up the ConnectionFactory
+            factory = (ConnectionFactory) context.lookup(factoryName);
+            // look up the Destination
+            destReceiver = (Destination) context.lookup(Constants.DESTNAME_MSP_TOPIC);
+            // create the connection
+            connection = (Connection) factory.createConnection();
+            // create the session
+            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            // create the producer
+            receiver = session.createConsumer(destReceiver, "JMSType IN ('GA','SF','GS','EC')");
+            // start the connection, to enable message sends
+            connection.start();
+            stopListen = false;
+            while(true){
+                ObjectMessage messageReceive = (ObjectMessage) receiver.receive();
+                if(messageReceive instanceof ObjectMessage){
+                    Volume volume = (Volume) messageReceive.getObject();
+                    System.out.println("Volume Received : "+ volume.toString());
+                }
+            }
+        } catch (NamingException | JMSException ex) {
+            Logger.getLogger(JMSProvider.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+            // close the context
+            if (context != null) {
+                try {
+                    context.close();
+                } catch (NamingException exception) {
+                    exception.printStackTrace();
+                }
+            }
+
+            // close the connection
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (JMSException exception) {
+                    exception.printStackTrace();
+                }
+            }
+        }
+    }
     public void listenToArchiveArticle(List<Article> listArticleReceived){
         try {
             //openConnexion = true;

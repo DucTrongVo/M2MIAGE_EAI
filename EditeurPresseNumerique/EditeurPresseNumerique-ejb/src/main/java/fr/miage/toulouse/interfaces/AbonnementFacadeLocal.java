@@ -25,12 +25,14 @@ public interface AbonnementFacadeLocal {
     Abonnement find(Object id);
 
     List<Abonnement> findAll();
+    
+    List<Abonnement> findAllAbonnement();
 
     List<Abonnement> findRange(int[] range);
     
-    Abonnement findExistedAbonnement(Long idUtilisateur, Long idTitre, int numberOfCopies, int durationInWeeks);
+    Abonnement findExistedAbonnement(String idUtilisateur, String codeTitre, int numberOfCopies, int durationInWeeks);
     
-    Abonnement createAbonnement(Long idUtilisateur, Long idTitre, int numberOfCopies, int durationInWeeks);
+    Abonnement createAbonnement(String idUtilisateur, String codeTitre, int numberOfCopies, int durationInWeeks);
 
     int count();
     

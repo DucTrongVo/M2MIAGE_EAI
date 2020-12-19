@@ -14,6 +14,14 @@ public final class Constants {
     // BD user : miage20 pass: miage20
     public static final String ARTICLE = "Article";
     
+    public static final String BASIC_URL = "http://localhost:8080/EditeurPresseNumerique-web/webresources/";
+    
+    public static final String CONNECTER = "Connexion";
+    public static final String DECONNECTER = "Déconnexion";
+    
+    //public static final String DATE_FORMAT = "dd-MM-yyyy HH:mm:ss";
+    public static final String DATE_FORMAT = "dd-MM-yyyy";
+    
     public static final String CODE_TITRE = "codeTitre";
     public static final String NUM_VOL = "numVolume";
     public static final String NAME_VOL = "nomVolume";
@@ -36,6 +44,16 @@ public final class Constants {
     
     public static final String REC_WANT_ARTICLE = "Show Time!";
     
+    public static final String EMPTY_NAME = "Votre nom ne doit pas être vide!";
+    
+    public static final String EMPTY_EMAIL = "Votre identifiant ne doit pas être vide!";
+    
+    public static final String EMPTY_PASWWORD = "Votre mot de passe ne doit pas être vide!";
+    
+    public static final String PASSWORD_NOT_MATCH = "Les deux mots de passe ne sont pas le même!";
+    
+    public static final String EMPTY_ADRESSE = "Votre adresse ne doit pas être vide!";
+    
     public static final String EMPTY_NAME_AUTHOR = "Le nom d'auteur ne doit pas être vide!";
     
     public static final String EMPTY_CONTENT_ARTICLE = "Le contenu d'article ne doit pas être vide!";
@@ -54,9 +72,13 @@ public final class Constants {
     
     public static final String EMPTY_NUM_VOLUME = "Il faut définir un numéro de volume!";
     
+    public static final String FAILED = "Action échoué!";
+    
     public static final String FACTORYNAME = "jms/__defaultConnectionFactory";
     
     public static final String FINAL_ARTICLE = "finalArticle";
+    
+    public static final String NO_RIGHT = "L'utilisateur n'a pas le droit pour réaliser cette opération!";
     
     public static final String PUBLICITE = "Publicite";
     
@@ -78,5 +100,15 @@ public final class Constants {
     public static final String THEME_CODE_2 = "SF";
     public static final String THEME_CODE_3 = "GS";
     public static final String THEME_CODE_4 = "EC";
+    
+    public static final String UNKNOWN_VOLUME = "Volume Inconnu!";
+    
+    public static final String UNKNOWN_USER = "Utilisateur Inconnu!";
+    
+    public static final String UNKNOWN_TITRE = "Titre Inconnu!";
+    
+    public static final String UNKNOWN_ARTICLE = "Article Inconnu!";
+    
+    public static final String UNKNOWN_PUB = "Publicité Inconnu!";
     
 }

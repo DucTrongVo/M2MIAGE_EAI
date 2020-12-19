@@ -80,7 +80,7 @@ public class Publicite implements Serializable {
 
     @Override
     public String toString() {
-        return "fr.miage.toulouse.entities.Publicite[ id=" + id + " ]";
+        return "Publicite : id=" + id + " - Nom : "+nomPub+" - Descriptions : "+descriptionPub;
     }
     
 }

@@ -8,6 +8,7 @@ package fr.miage.toulouse.interfaces;
 import fr.miage.toulouse.entities.Article;
 import fr.miage.toulouse.entities.Publicite;
 import fr.miage.toulouse.entities.Volume;
+import java.time.LocalDate;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -27,10 +28,12 @@ public interface VolumeFacadeLocal {
     Volume find(Object id);
 
     List<Volume> findAll();
+    
+    List<Volume> findAllVolume();
 
     List<Volume> findRange(int[] range);
     
-    Volume createVolume(String codeTitre, String numVolume, String nomVolume, List<Article> listArticles, List<Publicite> listPublicites);
+    Volume createVolume(String codeTitre, String numVolume, String nomVolume, List<Article> listArticles, List<Publicite> listPublicites, String dateTime);
     
     //List<Volume> findVolumeByCodeTitre(String codeTitre);
     

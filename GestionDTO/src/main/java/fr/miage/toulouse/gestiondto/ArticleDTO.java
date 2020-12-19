@@ -5,8 +5,7 @@
  */
 package fr.miage.toulouse.gestiondto;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -15,23 +14,32 @@ import java.util.List;
  * @author trongvo
  */
 public class ArticleDTO {
-    
+    private Long id;
     private String nameArticle;
     private String codeArticle;
     private String nameAuthor;
     private List<String> keywords;
     private String content;
     private Long numArticle;
-    private LocalDateTime date;
+    private String date;
     //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
-    public ArticleDTO(String nameArticle, String codeArticle, String nameAuthor, List<String> keywords, String content) {
-        this.nameArticle = nameArticle;
-        this.codeArticle = codeArticle;
-        this.nameAuthor = nameAuthor;
-        this.keywords = keywords;
-        this.content = content;
-        this.date = LocalDateTime.now();
+    public ArticleDTO(){};
+
+    public ArticleDTO(String nameArticle, String codeArticle, String nameAuthor, List<String> keywords, String content, String date) {
+            this.nameArticle = nameArticle;
+            this.codeArticle = codeArticle;
+            this.nameAuthor = nameAuthor;
+            this.keywords = keywords;
+            this.content = content;
+            this.date = date != ""? date : LocalDate.now().format(DateTimeFormatter.ofPattern(Constants.DATE_FORMAT));
+        }
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getNameArticle() {
@@ -83,13 +91,19 @@ public class ArticleDTO {
     }
 
     
-    public LocalDateTime getDate(){
+    public String getDate(){
         return this.date;
     }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+    
+   
     
     @Override
     public String toString(){
         return "Code article : "+this.getCodeArticle()+" - Name article : "+this.getNameArticle()
-                +" - Author : "+this.getNameAuthor()+" - Date création : "+this.getDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
+                +" - Author : "+this.getNameAuthor()+" - Date création : "+this.getDate();
     }
 }

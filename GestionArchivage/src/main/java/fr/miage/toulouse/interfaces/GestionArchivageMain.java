@@ -5,19 +5,54 @@
  */
 package fr.miage.toulouse.interfaces;
 
+import fr.miage.toulouse.gestionarchivage.GestionArchive;
+import fr.miage.toulouse.gestiondto.Constants;
+import fr.miage.toulouse.gestiondto.UtilisateurDTO;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author trongvo
  */
 public class GestionArchivageMain extends javax.swing.JFrame {
 
+    GestionArchive gestionArchive;
+    static UtilisateurDTO currentUser;
+    Login loginInterface;
+    Inscription inscriptionInterface;
+    FindByNameTitre findByNameInterfaces;
+    FindByKeywords findByKeywordsInterfaces;
+    Abonnement abonnerInterfaces;
     /**
      * Creates new form GestionArchivageMain
      */
     public GestionArchivageMain() {
         initComponents();
+        gestionArchive = new GestionArchive();
+        gestionArchive.start();
+        loginInterface = new Login(gestionArchive);
+        inscriptionInterface = new Inscription(gestionArchive);
+        findByNameInterfaces = new FindByNameTitre(gestionArchive);
+        findByKeywordsInterfaces = new FindByKeywords(gestionArchive);
+        abonnerInterfaces = new Abonnement(gestionArchive);
+        
+        loginInterface.setVisible(false);
+        inscriptionInterface.setVisible(false);
+        
+        jButtonAbonner.setVisible(false);
+        initiateState();
     }
-
+    
+    public void initiateState(){
+        buttonLogInLogOut.setText(Constants.CONNECTER);
+    }
+    
+    private void showLoginLogOutField(boolean loggedIn){
+        labelWelcom.setVisible(loggedIn);
+        labelWelcom2.setVisible(loggedIn);
+        labelNomUser.setVisible(loggedIn);
+        labelRole.setVisible(loggedIn);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -27,31 +62,226 @@ public class GestionArchivageMain extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        buttonLogInLogOut = new javax.swing.JButton();
+        buttonRegister = new javax.swing.JButton();
+        labelNomUser = new javax.swing.JLabel();
+        labelRole = new javax.swing.JLabel();
+        labelWelcom = new javax.swing.JLabel();
+        labelWelcom2 = new javax.swing.JLabel();
+        buttonShowUser = new javax.swing.JButton();
+        jButtonFindByName = new javax.swing.JButton();
+        jButtonFindByKeywoeds = new javax.swing.JButton();
+        jButtonAbonner = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Gestion Archivage"));
+
+        buttonLogInLogOut.setFont(new java.awt.Font("Ubuntu", 1, 16)); // NOI18N
+        buttonLogInLogOut.setText("Connecter");
+        buttonLogInLogOut.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        buttonLogInLogOut.setOpaque(true);
+        buttonLogInLogOut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonLogInLogOutActionPerformed(evt);
+            }
+        });
+
+        buttonRegister.setFont(new java.awt.Font("Ubuntu", 1, 16)); // NOI18N
+        buttonRegister.setText("S'Inscrire");
+        buttonRegister.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        buttonRegister.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonRegisterActionPerformed(evt);
+            }
+        });
+
+        labelNomUser.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        labelNomUser.setForeground(new java.awt.Color(32, 55, 225));
+
+        labelRole.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        labelRole.setForeground(new java.awt.Color(32, 55, 225));
+
+        labelWelcom.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        labelWelcom.setForeground(new java.awt.Color(32, 55, 225));
+
+        labelWelcom2.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        labelWelcom2.setForeground(new java.awt.Color(32, 55, 225));
+
+        buttonShowUser.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        buttonShowUser.setText("Rafraichir");
+        buttonShowUser.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        buttonShowUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonShowUserActionPerformed(evt);
+            }
+        });
+
+        jButtonFindByName.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
+        jButtonFindByName.setText("RECHERCHE TITRE PAR NOM");
+        jButtonFindByName.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonFindByName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonFindByNameActionPerformed(evt);
+            }
+        });
+
+        jButtonFindByKeywoeds.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
+        jButtonFindByKeywoeds.setText("RECHERCHE TITRE PAR MOT CLES");
+        jButtonFindByKeywoeds.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonFindByKeywoeds.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonFindByKeywoedsActionPerformed(evt);
+            }
+        });
+
+        jButtonAbonner.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
+        jButtonAbonner.setText("ABONNER UN TITRE");
+        jButtonAbonner.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonAbonner.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAbonnerActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(labelWelcom2, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
+                    .addComponent(labelWelcom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelNomUser, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelRole, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 266, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(buttonLogInLogOut, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
+                    .addComponent(buttonShowUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(buttonRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(259, 259, 259)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonAbonner, javax.swing.GroupLayout.PREFERRED_SIZE, 428, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonFindByKeywoeds, javax.swing.GroupLayout.PREFERRED_SIZE, 428, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonFindByName, javax.swing.GroupLayout.PREFERRED_SIZE, 428, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(buttonRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(labelNomUser, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelRole, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGap(127, 127, 127))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(labelWelcom, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelWelcom2, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(buttonLogInLogOut, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(buttonShowUser, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 118, Short.MAX_VALUE)))
+                .addComponent(jButtonFindByName, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(48, 48, 48)
+                .addComponent(jButtonFindByKeywoeds, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(52, 52, 52)
+                .addComponent(jButtonAbonner, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(93, 93, 93))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void buttonLogInLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLogInLogOutActionPerformed
+        //JsonObject jsonObject = gestionArchive.get("api/hello");
+        if(buttonLogInLogOut.getText().equals(Constants.CONNECTER)){
+            loginInterface.setVisible(true);
+        }else{
+            GestionArchivageMain.currentUser = null;
+            loginInterface.removeCurrentUser();
+            buttonLogInLogOut.setText(Constants.CONNECTER);
+            showLoginLogOutField(false);
+            jButtonAbonner.setVisible(false);
+            JOptionPane.showMessageDialog(this, Constants.SUCCES);
+        }
+        
+        
+    }//GEN-LAST:event_buttonLogInLogOutActionPerformed
+
+    private void buttonRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRegisterActionPerformed
+        inscriptionInterface.setVisible(true);
+    }//GEN-LAST:event_buttonRegisterActionPerformed
+
+    private void buttonShowUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonShowUserActionPerformed
+        try{
+            GestionArchivageMain.currentUser = loginInterface.getCurrentUser();
+            System.out.println("current User "+GestionArchivageMain.currentUser.toString());
+            buttonLogInLogOut.setText(Constants.DECONNECTER);
+            showLoginLogOutField(true);
+            labelWelcom.setText("Bienvenue ");
+            labelNomUser.setText(GestionArchivageMain.currentUser.getNom().toUpperCase());
+            labelWelcom2.setText("Vous êtes ");
+            labelRole.setText(GestionArchivageMain.currentUser.getRoles().contains(Constants.ROLES[1]) ? Constants.ROLES[1] : Constants.ROLES[0]);
+            jButtonAbonner.setVisible(true);
+        }catch(Exception e){
+            System.out.println("Erreur : "+e.toString());
+            JOptionPane.showMessageDialog(this, Constants.UNKNOWN_USER, "Inane error", JOptionPane.ERROR_MESSAGE);
+        }
+        
+    }//GEN-LAST:event_buttonShowUserActionPerformed
+
+    private void jButtonFindByNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFindByNameActionPerformed
+        findByNameInterfaces.setVisible(true);
+    }//GEN-LAST:event_jButtonFindByNameActionPerformed
+
+    private void jButtonFindByKeywoedsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFindByKeywoedsActionPerformed
+        findByKeywordsInterfaces.setVisible(true);
+    }//GEN-LAST:event_jButtonFindByKeywoedsActionPerformed
+
+    private void jButtonAbonnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAbonnerActionPerformed
+        abonnerInterfaces.setVisible(true);
+    }//GEN-LAST:event_jButtonAbonnerActionPerformed
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+        * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+        */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -59,18 +289,14 @@ public class GestionArchivageMain extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(GestionArchivageMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(GestionArchivageMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(GestionArchivageMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(GestionArchivageMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        
+        //</editor-fold>
 
-        /* Create and display the form */
+/* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new GestionArchivageMain().setVisible(true);
@@ -79,5 +305,16 @@ public class GestionArchivageMain extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton buttonLogInLogOut;
+    private javax.swing.JButton buttonRegister;
+    private javax.swing.JButton buttonShowUser;
+    private javax.swing.JButton jButtonAbonner;
+    private javax.swing.JButton jButtonFindByKeywoeds;
+    private javax.swing.JButton jButtonFindByName;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel labelNomUser;
+    private javax.swing.JLabel labelRole;
+    private javax.swing.JLabel labelWelcom;
+    private javax.swing.JLabel labelWelcom2;
     // End of variables declaration//GEN-END:variables
 }

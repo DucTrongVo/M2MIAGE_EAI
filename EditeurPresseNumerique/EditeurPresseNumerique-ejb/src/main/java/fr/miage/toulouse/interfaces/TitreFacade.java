@@ -5,15 +5,12 @@
  */
 package fr.miage.toulouse.interfaces;
 
-import fr.miage.toulouse.entities.Article;
 import fr.miage.toulouse.entities.Titre;
-import fr.miage.toulouse.entities.Volume;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -56,36 +53,33 @@ public class TitreFacade extends AbstractFacade<Titre> implements TitreFacadeLoc
         );
         return getEntityManager().createQuery(cq).getResultList();
     }
+    
+    @Override
+    public Titre findByCodeTitre(String codeTitre){
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Titre> cq = cb.createQuery(Titre.class);
+        Root<Titre> root = cq.from(Titre.class);
+        cq.where(
+            cb.and(
+                cb.like(cb.upper(root.get("codeTitre").as(String.class)), codeTitre.toUpperCase())
+            )
+        );
+        return getEntityManager().createQuery(cq).getSingleResult();
+    }
 
-//    @Override
-//    public List<Titre> findByKeywords(String keywords) {
-//        List<Titre> listTitres = titreFacadeLocal.findAll();
-//        List<Titre> listTitresFound = new ArrayList<>();
-//        List<String> listKeysReceived = Arrays.asList(keywords.split(";"));
-//        for(Titre titre : listTitres){
-//            List<String> cloneListKey = new ArrayList<>(listKeysReceived);
-//            cloneListKey.retainAll(getKeywords(titre));
-//            if(cloneListKey.size() > 0){
-//                listTitresFound.add(titre);
-//            }
-//        }
-//        
-//        return listTitresFound;
-//    }
-//
-//    @Override
-//    public List<String> getKeywords(Titre titre) {
-//        List<String> listKeywords = new ArrayList<>();
-//        for(Volume volume : volumeFacadeLocal.findVolumeByCodeTitre(titre.getCodeTitre())){
-//            for(Article article : volume.getListArticles()){
-//                List<String> keywords = article.getKeywords();
-//                for(String key : keywords){
-//                    if(!listKeywords.contains(key)){
-//                        listKeywords.add(key);
-//                    }
-//                }
-//            }
-//        }
-//        return listKeywords;
-//    }
+    @Override
+    public Titre createTitre(String codeTitre, String nomTitre, String description, int rythmSortie) {
+        try{
+            return findByCodeTitre(codeTitre); 
+        }catch(NoResultException e){
+            Titre titre = new Titre(codeTitre, nomTitre, description, rythmSortie);
+            this.create(titre);
+            return titre;
+        }
+    }
+
+    @Override
+    public List<Titre> findAllTitre() {
+        return findAll();
+    }
 }

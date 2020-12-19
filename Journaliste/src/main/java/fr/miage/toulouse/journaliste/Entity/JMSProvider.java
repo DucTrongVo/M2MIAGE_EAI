@@ -60,7 +60,7 @@ public class JMSProvider {
             
             // Send article
             ObjectMessage message = session.createObjectMessage(article);
-            message.setJMSType(article.getCodeArticle());
+            //message.setJMSType(article.getCodeArticle());
             sender.send(message);
             System.out.println("Sent article: " + article.getCodeArticle());
                 //Thread.sleep(5000);

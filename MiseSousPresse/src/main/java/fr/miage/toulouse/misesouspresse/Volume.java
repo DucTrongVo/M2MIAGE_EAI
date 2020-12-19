@@ -5,10 +5,11 @@
  */
 package fr.miage.toulouse.misesouspresse;
 
+import fr.miage.toulouse.gestiondto.Constants;
 import fr.miage.toulouse.gestionpublicite.Publicite;
 import fr.miage.toulouse.journaliste.Entity.Article;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class Volume implements Serializable{
     private String nomVolume;
     private List<Article> listArticles;
     private List<Publicite> listPublicites;
-    private LocalDateTime dateTime;
+    private LocalDate dateTime;
 
     public Volume(String codeTitre, String numVolume, String nomVolume, List<Article> listArticles, List<Publicite> listPublicites) {
         this.codeTitre = codeTitre;
@@ -30,7 +31,7 @@ public class Volume implements Serializable{
         this.nomVolume = nomVolume;
         this.listArticles = listArticles;
         this.listPublicites = listPublicites;
-        this.dateTime = LocalDateTime.now();
+        this.dateTime = LocalDate.now();
     }
 
     public String getCodeTitre() {
@@ -73,17 +74,17 @@ public class Volume implements Serializable{
         this.listPublicites = listPublicites;
     }
 
-    public LocalDateTime getDateTime() {
+    public LocalDate getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
+    public void setDateTime(LocalDate dateTime) {
         this.dateTime = dateTime;
     }
     
     public String toString(){
         return "Code du Theme : "+this.codeTitre+" - Numéro du Volume : "+this.numVolume + " - Nom du Volume : "+this.nomVolume
-                +" - Date de création : "+this.dateTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss"))
+                +" - Date de création : "+this.dateTime.format(DateTimeFormatter.ofPattern(Constants.DATE_FORMAT))
                 +" - Nombre d'article : "+listArticles.size()+" - Nombre de publicité : "+listPublicites.size();
     }
 }

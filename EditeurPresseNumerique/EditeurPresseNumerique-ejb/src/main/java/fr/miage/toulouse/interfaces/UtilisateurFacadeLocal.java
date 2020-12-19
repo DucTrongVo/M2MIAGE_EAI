@@ -25,12 +25,18 @@ public interface UtilisateurFacadeLocal {
     Utilisateur find(Object id);
 
     List<Utilisateur> findAll();
+    
+    List<Utilisateur> findAllUsers();
 
     List<Utilisateur> findRange(int[] range);
     
     Utilisateur findByNom(String nom);
     
-    Utilisateur createUser(String nom, String initiales, String adresse, List<String> roles);
+    public Utilisateur findByMail(String mail);
+    
+    Utilisateur findByMailAndPassword(String mail, String password);
+    
+    Utilisateur createUser(String nom, String mail, String password, String adresse, String roles);
 
     int count();
     

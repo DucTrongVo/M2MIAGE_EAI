@@ -10,7 +10,6 @@ import fr.miage.toulouse.gestiondto.Constants;
 import fr.miage.toulouse.redacteurenchef.JMSProvider;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -38,6 +37,7 @@ public class RedacteurEnChefMain extends javax.swing.JFrame {
     public RedacteurEnChefMain() {
         initComponents();
         jmsProvider = new JMSProvider();
+        jmsProvider.start();
         listArticlesReceived = new ArrayList<>();
         listArticlesChosen = new ArrayList<>();
         tableArticleReceiveModel.setColumnIdentifiers(tableArticleReceivedHeaders);
@@ -76,7 +76,7 @@ public class RedacteurEnChefMain extends javax.swing.JFrame {
         for(Article article : listArticlesReceived){
             tableArticleReceiveModel.addRow(new Object[]{Boolean.FALSE,
                     article.getNameArticle(), article.getCodeArticle(),
-                    article.getNameAuthor(), article.getContent(), article.getDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"))});
+                    article.getNameAuthor(), article.getContent(), article.getDate().format(DateTimeFormatter.ofPattern(Constants.DATE_FORMAT))});
         }
     }
     
@@ -130,6 +130,8 @@ public class RedacteurEnChefMain extends javax.swing.JFrame {
         textAreaContent = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        tabSendArticles.setBorder(javax.swing.BorderFactory.createTitledBorder("Redacteur En Chef"));
 
         buttonGetArticles.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
         buttonGetArticles.setText("Recuperer les articles");
@@ -186,7 +188,7 @@ public class RedacteurEnChefMain extends javax.swing.JFrame {
                             .addComponent(jLabelCodeThem, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(10, 10, 10)
                         .addComponent(jComboBoxCodeThem, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(37, Short.MAX_VALUE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
         tabGetArticleLayout.setVerticalGroup(
             tabGetArticleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -201,7 +203,7 @@ public class RedacteurEnChefMain extends javax.swing.JFrame {
                     .addComponent(jComboBoxCodeThem, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(40, 40, 40)
                 .addComponent(buttonSendArticles, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(44, Short.MAX_VALUE))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         tabSendArticles.addTab("Demander Nouveaux Articles", tabGetArticle);
@@ -260,7 +262,7 @@ public class RedacteurEnChefMain extends javax.swing.JFrame {
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(56, 56, 56)
-                                        .addComponent(textFieldCodeArticle, javax.swing.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE))
+                                        .addComponent(textFieldCodeArticle, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE))
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -305,7 +307,7 @@ public class RedacteurEnChefMain extends javax.swing.JFrame {
                     .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(textFieldKeywords, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
+                .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(58, 58, 58))
@@ -353,7 +355,7 @@ public class RedacteurEnChefMain extends javax.swing.JFrame {
             switch(theme){
                 case Constants.THEME_NAMES_1: codeTheme = "GA";break;
                 case Constants.THEME_NAMES_2: codeTheme = "SF";break;
-                case Constants.THEME_NAMES_3: codeTheme = "SC";break;
+                case Constants.THEME_NAMES_3: codeTheme = "GS";break;
                 case Constants.THEME_NAMES_4: codeTheme = "EC";break;
                 default: codeTheme = "GA";break;
             }
@@ -382,7 +384,7 @@ public class RedacteurEnChefMain extends javax.swing.JFrame {
             textFieldNameArticle.setText(article.getNameArticle());
             textFieldCodeArticle.setText(article.getCodeArticle());
             textFieldNameAuthor.setText(article.getNameAuthor());
-            textFieldDateCreation.setText(article.getDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
+            textFieldDateCreation.setText(article.getDate().format(DateTimeFormatter.ofPattern(Constants.DATE_FORMAT)));
             textFieldKeywords.setText(article.getKeywords().toString().replaceAll("[\\[\\]]", ""));
             textAreaContent.setText(article.getContent()); 
         }

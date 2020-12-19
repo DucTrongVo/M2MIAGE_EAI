@@ -5,8 +5,9 @@
  */
 package fr.miage.toulouse.journaliste.Entity;
 
+import fr.miage.toulouse.gestiondto.Constants;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class Article implements Serializable{
     private String content;
     private int numArticle;
     //private String codeTitre;
-    private LocalDateTime date;
+    private LocalDate date;
     private static int numGlobalArticle = 0;
     //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
@@ -35,7 +36,7 @@ public class Article implements Serializable{
         this.keywords = keywords;
         this.content = content;
         //this.codeTitre = codeTitre;
-        this.date = LocalDateTime.now();
+        this.date = LocalDate.now();
         this.numArticle = Article.numGlobalArticle + 1;
     }
 
@@ -95,13 +96,13 @@ public class Article implements Serializable{
 //        this.codeTitre = codeTitre;
 //    }
     
-    public LocalDateTime getDate(){
+    public LocalDate getDate(){
         return this.date;
     }
     
     @Override
     public String toString(){
-        return "Code article : "+this.getCodeArticle()+" - Name article : "+this.getNameArticle()
-                +" - Author : "+this.getNameAuthor()+" - Date création : "+this.getDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
+        return "Code article : "+this.getCodeArticle()+" - Name article : "+this.getNameArticle()+ " - Keywords : "+this.getKeywords()
+                +" - Author : "+this.getNameAuthor()+" - Date création : "+this.getDate().format(DateTimeFormatter.ofPattern(Constants.DATE_FORMAT));
     }
 }

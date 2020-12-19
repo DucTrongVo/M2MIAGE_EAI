@@ -70,16 +70,21 @@ public class VolumeFacade extends AbstractFacade<Volume> implements VolumeFacade
 //    }
 
     @Override
-    public Volume createVolume(String codeTitre, String numVolume, String nomVolume, List<Article> listArticles, List<Publicite> listPublicites) {
+    public Volume createVolume(String codeTitre, String numVolume, String nomVolume, List<Article> listArticles, List<Publicite> listPublicites, String dateTime) {
         try{
             return findVolumeByNumber(numVolume, codeTitre);
         }catch(NoResultException e){
-            Volume volume = new Volume(codeTitre, numVolume, nomVolume, listArticles, listPublicites);
+            Volume volume = new Volume(codeTitre, numVolume, nomVolume, listArticles, listPublicites, dateTime);
             this.create(volume);
             System.out.println(Constants.CREATE_SUCCES);
-            System.out.println("Create "+volume.toString());
+            System.out.println("Create Volume : "+volume.toString());
             return volume;
         }
+    }
+
+    @Override
+    public List<Volume> findAllVolume() {
+        return findAll();
     }
     
 }

@@ -151,12 +151,12 @@ public class MiseSousPressMain extends javax.swing.JFrame {
             return false;
         }
         
-        if(listArticleOfVolume.size() == 0){
+        if(listArticleOfVolume.isEmpty()){
             messError = Constants.EMPTY_LIST_ARTICLE_CHOSEN;
             return false;
         }
         
-        if(listPubsOfVolume.size() == 0){
+        if(listPubsOfVolume.isEmpty()){
             messError = Constants.EMPTY_LIST_PUBS;
             return false;
         }
@@ -461,7 +461,12 @@ public class MiseSousPressMain extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonCreateVolumeActionPerformed
 
     private void buttonSendVolumeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSendVolumeActionPerformed
-        // TODO add your handling code here:
+        Volume volume = miseSousPresse.sendVolume(volumeToSend);
+        if(volume != null){
+            JOptionPane.showMessageDialog(this, Constants.SUCCES);
+        }else{
+            JOptionPane.showMessageDialog(this, Constants.FAILED, "Inane error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_buttonSendVolumeActionPerformed
 
     /**

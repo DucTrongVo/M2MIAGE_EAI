@@ -7,6 +7,7 @@ package fr.miage.toulouse.interfaces;
 
 import fr.miage.toulouse.entities.Article;
 import fr.miage.toulouse.gestiondto.Constants;
+import java.time.LocalDate;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -53,11 +54,11 @@ public class ArticleFacade extends AbstractFacade<Article> implements ArticleFac
     }
     
     @Override
-    public Article createArticle(String nameArticle, String codeArticle, String nameAuthor, List<String> keywords, String content) {
+    public Article createArticle(String nameArticle, String codeArticle, String nameAuthor, List<String> keywords, String content, String date) {
         try{
             return findByCodeArticle(codeArticle);
         }catch(NoResultException e){
-            Article article = new Article(nameArticle, codeArticle, nameAuthor, keywords, content);
+            Article article = new Article(nameArticle, codeArticle, nameAuthor, keywords, content, date);
             this.create(article);
             System.out.println(Constants.CREATE_SUCCES);
             System.out.println("Created "+article.toString());

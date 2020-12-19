@@ -10,12 +10,22 @@ package fr.miage.toulouse.gestiondto;
  * @author trongvo
  */
 public class PubliciteDTO {
+    private Long id;
     private String nomPub;
     private String descriptionPub;
 
+    public PubliciteDTO(){};
     public PubliciteDTO(String nomPub, String descriptionPub) {
         this.nomPub = nomPub;
         this.descriptionPub = descriptionPub;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getNomPub() {

@@ -142,7 +142,7 @@ public class MiseSousPresse extends Thread{
         }
     }
     
-    public void sendVolumeToTopic(Volume volume){
+    public Volume sendVolume(Volume volume){
         try {
             //openConnexion = true;
             // create the JNDI initial context.
@@ -159,15 +159,19 @@ public class MiseSousPresse extends Thread{
             producerTopic = session.createProducer(destProducerTopic);
             // start the connection, to enable message sends
             connection.start();
-            ObjectMessage objectMessage = (ObjectMessage) session.createObjectMessage();
-            
-            objectMessage.setStringProperty(Constants.CODE_TITRE, volume.getCodeTitre());
-            objectMessage.setStringProperty(Constants.NUM_VOL, volume.getNumVolume());
-            objectMessage.setStringProperty(Constants.NAME_VOL, volume.getNomVolume());
+            ObjectMessage objectMessage = (ObjectMessage) session.createObjectMessage(volume);
+            objectMessage.setJMSType(volume.getCodeTitre());
+            producerTopic.send(objectMessage);
+            System.out.println("Mise Sous Presse send Volume to Topic : "+volume.toString());
+//            objectMessage.setStringProperty(Constants.CODE_TITRE, volume.getCodeTitre());
+//            objectMessage.setStringProperty(Constants.NUM_VOL, volume.getNumVolume());
+//            objectMessage.setStringProperty(Constants.NAME_VOL, volume.getNomVolume());
             //objectMessage.set
+            return volume;
         } catch (NamingException | JMSException ex) {
             System.out.println("Exception : "+ex.toString());
             Logger.getLogger(MiseSousPresse.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         } finally {
             // close the context
             if (context != null) {

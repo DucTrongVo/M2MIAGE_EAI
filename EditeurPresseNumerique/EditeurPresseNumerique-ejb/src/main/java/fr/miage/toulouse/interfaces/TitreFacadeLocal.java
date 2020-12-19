@@ -6,7 +6,6 @@
 package fr.miage.toulouse.interfaces;
 
 import fr.miage.toulouse.entities.Titre;
-import fr.miage.toulouse.entities.Volume;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -30,6 +29,12 @@ public interface TitreFacadeLocal {
     List<Titre> findRange(int[] range);
     
     List<Titre> findByNom(String nomTitre);
+    
+    public Titre findByCodeTitre(String codeTitre);
+    
+    Titre createTitre(String codeTitre, String nomTitre, String description, int rythmSortie);
+    
+    List<Titre> findAllTitre();
     
 //    List<String> getKeywords(Titre titre);
 //    

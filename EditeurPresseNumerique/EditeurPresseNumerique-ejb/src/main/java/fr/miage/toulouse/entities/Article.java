@@ -5,7 +5,10 @@
  */
 package fr.miage.toulouse.entities;
 
+import fr.miage.toulouse.gestiondto.Constants;
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,16 +31,18 @@ public class Article implements Serializable {
     private String nameAuthor;
     private List<String> keywords;
     private String content;
+    private String date;
 
     public Article() {
     }
 
-    public Article(String nameArticle, String codeArticle, String nameAuthor, List<String> keywords, String content) {
+    public Article(String nameArticle, String codeArticle, String nameAuthor, List<String> keywords, String content, String date) {
         this.nameArticle = nameArticle;
         this.codeArticle = codeArticle;
         this.nameAuthor = nameAuthor;
         this.keywords = keywords;
         this.content = content;
+        this.date = date;
     }
 
     public String getNameArticle() {
@@ -79,6 +84,14 @@ public class Article implements Serializable {
     public void setContent(String content) {
         this.content = content;
     }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
     
     
 
@@ -111,8 +124,9 @@ public class Article implements Serializable {
     }
 
     @Override
-    public String toString() {
-        return "fr.miage.toulouse.entities.Article[ id=" + id + " ]";
+    public String toString(){
+        return "Code article : "+this.getCodeArticle()+" - Name article : "+this.getNameArticle() + " - Keywords : "+this.keywords.toString()
+                +" - Author : "+this.getNameAuthor()+" - Date création : "+this.getDate();
     }
     
 }
