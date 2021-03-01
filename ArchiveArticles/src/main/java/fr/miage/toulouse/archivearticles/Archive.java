@@ -6,8 +6,9 @@
 package fr.miage.toulouse.archivearticles;
 
 import fr.miage.toulouse.journaliste.Entity.Article;
-import fr.miage.toulouse.journaliste.Entity.Constants;
+import fr.miage.toulouse.gestiondto.Constants;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -32,6 +33,9 @@ public class Archive {
 
     public Archive() {
         this.listArticles = new ArrayList<>();
+        listArticles.add(new Article("Article 01", "A01", "Fong-Lopez", Arrays.asList("MIAGE", "M2", "Session 2"), "Ce auteur est très probablement aller en session 2"));
+        listArticles.add(new Article("Article 02", "A02", "Faucher", Arrays.asList("MIAGE", "M2", "Redoublant"), "Ce auteur est très probablement redoublé"));
+        listArticles.add(new Article("Article 03", "A03", "VO", Arrays.asList("MIAGE", "M2", "Genie"), "Ce auteur est un génie"));
     }
 
     public List<Article> getListArticles() {
@@ -43,7 +47,9 @@ public class Archive {
     }
     
     public void addNewArticle(Article article){
-        this.listArticles.add(article);
+        if(!listArticles.contains(article)){
+            this.listArticles.add(article);
+        }
     }
     
     public void removeArticleFromList(int numArticle){

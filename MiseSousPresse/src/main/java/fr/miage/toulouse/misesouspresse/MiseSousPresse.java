@@ -7,9 +7,12 @@ package fr.miage.toulouse.misesouspresse;
 
 import fr.miage.toulouse.gestionpublicite.Publicite;
 import fr.miage.toulouse.journaliste.Entity.Article;
-import fr.miage.toulouse.journaliste.Entity.Constants;
+import fr.miage.toulouse.gestiondto.Constants;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.jms.Connection;
@@ -29,27 +32,44 @@ import javax.naming.NamingException;
  * @author trongvo
  */
 public class MiseSousPresse extends Thread{
-    private List<Article> listArtciles;
+    private HashMap<String,List<Article>> listArticles;
     private List<Publicite> listPublicites;
     
     private Context context = null;
     private ConnectionFactory factory = null;
     private Connection connection = null;
     private String factoryName = Constants.FACTORYNAME;
-    //private String destNameProducer = Constants.DESTNAME_ARCHIVE_RECEIVER;
+    private String destNameProducerTopic = Constants.DESTNAME_MSP_TOPIC;
     private String destNameReceiver = Constants.DESTNAME_MSP_RECEIVER;
     //private String destNameRECProducer = Constants.DESTNAME_ARCHIVE_PRODUCER;
-    //private Destination destProducer = null;
+    private Destination destProducerTopic = null;
     private Destination destReceiver = null;
     private Session session = null;
-    //private MessageProducer producer = null;
+    private MessageProducer producerTopic = null;
     private MessageConsumer receiver = null;
+
+    public HashMap<String, List<Article>> getListArticles() {
+        return listArticles;
+    }
+
+    public List<Publicite> getListPublicites() {
+        return listPublicites;
+    }
+
+    public int getNbrArticles() {
+        int nb = 0;
+        for(Map.Entry<String, List<Article>> entry : listArticles.entrySet()){
+            nb += entry.getValue().size();
+        }
+        return nb;
+    }
     
     public MiseSousPresse(){
-        listArtciles = new ArrayList<>();
+        listArticles = new HashMap<>();
         listPublicites = new ArrayList<>();
     }
     
+    @Override
     public void run(){
         try {
             //openConnexion = true;
@@ -70,28 +90,40 @@ public class MiseSousPresse extends Thread{
             while(true){
                 ObjectMessage messageReceive = (ObjectMessage) receiver.receive();
                 if(messageReceive instanceof ObjectMessage){
-                    Class<? extends ObjectMessage> messageClass = messageReceive.getClass();
-                    if(messageClass.equals(Article.class)){
-                        Article articleReceive = (Article) messageReceive.getObject();
-                        System.out.println("MSP Received Article : "+articleReceive.toString());
-                        this.listArtciles.add(articleReceive);
-                    }else if (messageClass.equals(Publicite.class)){
-                        Publicite pub = (Publicite) messageReceive.getObject();
-                        System.out.println("MSP Received Publicité : "+pub.toString());
-                        this.listPublicites.add(pub);
-                    }else{
-                        System.out.println("MSP Received unknown message : "+messageReceive.toString());
+                    String typeMessage = messageReceive.getStringProperty(Constants.TYPE);
+                    switch (typeMessage) {
+                        case Constants.ARTICLE:
+                            Article articleReceive = (Article) messageReceive.getObject();
+                            System.out.println("MSP Received Article : "+articleReceive.toString());
+                            String themeReceive = messageReceive.getStringProperty(Constants.CODE_TITRE);
+                            if(listArticles.containsKey(themeReceive)){
+                                System.out.println("listArtciles.get(themeReceive) "+listArticles.get(themeReceive));
+                                listArticles.get(themeReceive).add(articleReceive);
+                                System.out.println("Added from existing : "+articleReceive.toString());
+                            }else{
+                                listArticles.put(themeReceive, new ArrayList<>(Arrays.asList(articleReceive)));
+                                System.out.println("Created list for : "+articleReceive.toString());
+                            }
+                            break;
+                        case Constants.PUBLICITE:
+                            Publicite pub = (Publicite) messageReceive.getObject();
+                            System.out.println("MSP Received Publicité : "+pub.toString());
+                            this.listPublicites.add(pub);
+                            break;
+                        default:
+                            System.out.println("MSP Received unknown message : "+messageReceive.toString());
+                            break;
                     }
                 }
             }
-        } catch (NamingException ex) {
-            Logger.getLogger(MiseSousPresse.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (JMSException ex) {
+        } catch (NamingException | JMSException ex) {
+            System.out.println("Exception : "+ex.toString());
             Logger.getLogger(MiseSousPresse.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             // close the context
             if (context != null) {
                 try {
+                    System.out.println("Close context");
                     context.close();
                 } catch (NamingException exception) {
                     exception.printStackTrace();
@@ -101,6 +133,60 @@ public class MiseSousPresse extends Thread{
             // close the connection
             if (connection != null) {
                 try {
+                    System.out.println("Close connection");
+                    connection.close();
+                } catch (JMSException exception) {
+                    exception.printStackTrace();
+                }
+            }
+        }
+    }
+    
+    public Volume sendVolume(Volume volume){
+        try {
+            //openConnexion = true;
+            // create the JNDI initial context.
+            context = new InitialContext();
+            // look up the ConnectionFactory
+            factory = (ConnectionFactory) context.lookup(factoryName);
+            // look up the Destination
+            destProducerTopic = (Destination) context.lookup(destNameProducerTopic);
+            // create the connection
+            connection = (Connection) factory.createConnection();
+            // create the session
+            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            // create the producer
+            producerTopic = session.createProducer(destProducerTopic);
+            // start the connection, to enable message sends
+            connection.start();
+            ObjectMessage objectMessage = (ObjectMessage) session.createObjectMessage(volume);
+            objectMessage.setJMSType(volume.getCodeTitre());
+            producerTopic.send(objectMessage);
+            System.out.println("Mise Sous Presse send Volume to Topic : "+volume.toString());
+//            objectMessage.setStringProperty(Constants.CODE_TITRE, volume.getCodeTitre());
+//            objectMessage.setStringProperty(Constants.NUM_VOL, volume.getNumVolume());
+//            objectMessage.setStringProperty(Constants.NAME_VOL, volume.getNomVolume());
+            //objectMessage.set
+            return volume;
+        } catch (NamingException | JMSException ex) {
+            System.out.println("Exception : "+ex.toString());
+            Logger.getLogger(MiseSousPresse.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        } finally {
+            // close the context
+            if (context != null) {
+                try {
+                    System.out.println("Close context");
+                    context.close();
+                } catch (NamingException exception) {
+                    exception.printStackTrace();
+                }
+            }
+
+            // close the connection
+            if (connection != null) {
+                try {
+                    System.out.println("Close connection");
                     connection.close();
                 } catch (JMSException exception) {
                     exception.printStackTrace();

@@ -10,4 +10,11 @@
     <module>EditeurPresseNumerique-web</module>
     <module>EditeurPresseNumerique-ejb</module>
   </modules>
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>GestionDTO</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 </project>

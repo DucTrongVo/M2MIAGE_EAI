@@ -5,6 +5,7 @@
  */
 package fr.miage.toulouse.journaliste.Entity;
 
+import fr.miage.toulouse.gestiondto.Constants;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.Context;
@@ -59,7 +60,7 @@ public class JMSProvider {
             
             // Send article
             ObjectMessage message = session.createObjectMessage(article);
-            message.setJMSType(article.getCodeArticle());
+            //message.setJMSType(article.getCodeArticle());
             sender.send(message);
             System.out.println("Sent article: " + article.getCodeArticle());
                 //Thread.sleep(5000);

@@ -1,3 +1,10 @@
 /Journaliste/target/
 /ArchiveArticles/target/
 /RedacteurEnChef/target/
+/GestionPublicite/target/
+/MiseSousPresse/target/
+/GestionArchivage/target/
+/EditeurPresseNumerique/EditeurPresseNumerique-ejb/target/
+/EditeurPresseNumerique/EditeurPresseNumerique-web/target/
+/EditeurPresseNumerique/EditeurPresseNumerique-ear/target/
+/GestionDTO/target/

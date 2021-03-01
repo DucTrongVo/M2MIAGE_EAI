@@ -6,7 +6,7 @@
 package fr.miage.toulouse.journaliste.Interfaces;
 
 import fr.miage.toulouse.journaliste.Entity.Article;
-import fr.miage.toulouse.journaliste.Entity.Constants;
+import fr.miage.toulouse.gestiondto.Constants;
 import fr.miage.toulouse.journaliste.Entity.JMSProvider;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -251,8 +251,10 @@ public class JournalisteMain extends javax.swing.JFrame {
             //this.codeTitre = textFieldCodeTitre.getText();
 
             Article article = new Article(nameArticle, codeArticle, nameAuthor, keywords, content);
-            JOptionPane.showMessageDialog(this, "Article envoyé avec succuès!");
+            
             sender.sendArticle(article);
+            JOptionPane.showMessageDialog(this, Constants.SEND_SUCCEDED);
+            
             textFieldNomArticle.setText("");
             textFieldCodeArticle.setText("");
             textAreaContent.setText("");

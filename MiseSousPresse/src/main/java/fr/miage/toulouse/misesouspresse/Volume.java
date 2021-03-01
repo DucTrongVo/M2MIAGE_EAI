@@ -5,8 +5,12 @@
  */
 package fr.miage.toulouse.misesouspresse;
 
+import fr.miage.toulouse.gestiondto.Constants;
+import fr.miage.toulouse.gestionpublicite.Publicite;
 import fr.miage.toulouse.journaliste.Entity.Article;
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -18,12 +22,16 @@ public class Volume implements Serializable{
     private String numVolume;
     private String nomVolume;
     private List<Article> listArticles;
+    private List<Publicite> listPublicites;
+    private LocalDate dateTime;
 
-    public Volume(String codeTitre, String numVolume, String nomVolume, List<Article> listArticles) {
+    public Volume(String codeTitre, String numVolume, String nomVolume, List<Article> listArticles, List<Publicite> listPublicites) {
         this.codeTitre = codeTitre;
         this.numVolume = numVolume;
         this.nomVolume = nomVolume;
         this.listArticles = listArticles;
+        this.listPublicites = listPublicites;
+        this.dateTime = LocalDate.now();
     }
 
     public String getCodeTitre() {
@@ -57,6 +65,26 @@ public class Volume implements Serializable{
     public void setListArticles(List<Article> listArticles) {
         this.listArticles = listArticles;
     }
+
+    public List<Publicite> getListPublicites() {
+        return listPublicites;
+    }
+
+    public void setListPublicites(List<Publicite> listPublicites) {
+        this.listPublicites = listPublicites;
+    }
+
+    public LocalDate getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(LocalDate dateTime) {
+        this.dateTime = dateTime;
+    }
     
-    
+    public String toString(){
+        return "Code du Theme : "+this.codeTitre+" - Numéro du Volume : "+this.numVolume + " - Nom du Volume : "+this.nomVolume
+                +" - Date de création : "+this.dateTime.format(DateTimeFormatter.ofPattern(Constants.DATE_FORMAT))
+                +" - Nombre d'article : "+listArticles.size()+" - Nombre de publicité : "+listPublicites.size();
+    }
 }

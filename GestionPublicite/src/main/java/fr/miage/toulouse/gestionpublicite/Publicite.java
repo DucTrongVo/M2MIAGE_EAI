@@ -5,11 +5,13 @@
  */
 package fr.miage.toulouse.gestionpublicite;
 
+import java.io.Serializable;
+
 /**
  *
  * @author trongvo
  */
-public class Publicite {
+public class Publicite implements Serializable{
     private String nomPub;
     private String descriptionPub;
 
@@ -34,6 +36,7 @@ public class Publicite {
         this.descriptionPub = descriptionPub;
     }
     
+    @Override
     public String toString(){
         return "Nom du pub : "+nomPub+" - Description : "+descriptionPub;
     }
